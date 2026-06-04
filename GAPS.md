@@ -72,40 +72,10 @@ This document provides detailed analysis and implementation roadmap for each gap
 
 ---
 
-## Gap 2: ErrUnauthorized Sentinel Never Used
+## Gap 2: ErrUnauthorized Sentinel Never Used (Resolved)
 
-- **Intended Behavior**: Per PR #1 ("Domain errors using go-tor's pkg/errors conventions"), domain-specific errors should be used for categorized error handling. `ErrUnauthorized` was defined for protocol-level authorization failures.
-
-- **Current State**: `errors.go:11` defines:
-  ```go
-  ErrUnauthorized = torerrors.New(torerrors.CategoryProtocol, torerrors.SeverityHigh, "unauthorized tox peer")
-  ```
-  However, this error is never returned or wrapped anywhere. When the ACL rejects a connection in `listener.go:41-51`, the connection is simply closed and logged — no error is propagated.
-
-- **Blocked Goal**: Error categorization for unauthorized access is incomplete. Callers cannot programmatically distinguish authorization failures from other errors.
-
-- **Implementation Path**:
-  Option A (Recommended): Use the error when rejecting unauthorized connections:
-  ```go
-  // In listener.go Accept(), after ACL check fails:
-  if l.acl != nil && !l.acl.IsAuthorized(req.remoteKey) {
-      if req.conn != nil {
-          _ = req.conn.Close()
-      }
-      // Log as before...
-      // Return error for metrics/observability:
-      return nil, wrapProtocol("unauthorized connection", ErrUnauthorized)
-  }
-  ```
-  
-  Option B: Remove the unused sentinel if it's not needed:
-  ```go
-  // Delete from errors.go:11
-  ```
-
-- **Dependencies**: None.
-
-- **Effort**: Small — one-line addition or removal.
+- **Current State**: The unused `ErrUnauthorized` sentinel has been removed from `errors.go`.
+- **Status**: Resolved via Option B (remove unused sentinel).
 
 ---
 
@@ -152,7 +122,7 @@ Based on the tiebreaker (stubs on critical paths first):
 
 1. **Gap 1: handleConn stub** (CRITICAL) — Core bridge functionality is missing
 2. **Gap 3: ClientPublicKey** (HIGH) — Configuration clarity prevents user errors
-3. **Gap 2: ErrUnauthorized** (HIGH) — Error semantics completeness
+3. **Gap 2: ErrUnauthorized** (RESOLVED)
 
 ---
 
