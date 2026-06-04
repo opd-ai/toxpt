@@ -72,23 +72,23 @@
 
 ### MEDIUM
 
-- [ ] **MEDIUM-1: EmbeddableBridge.Stop() ignores close errors** — `bridge.go:100-102` — **Error Handling** — The `Stop` method discards errors from `b.listener.Close()` and `b.transport.Close()` using blank identifiers. While individual close errors may be acceptable to ignore, callers have no way to know if shutdown completed cleanly.
+- [x] **MEDIUM-1: EmbeddableBridge.Stop() ignores close errors** — `bridge.go:100-102` — **Error Handling** — `EmbeddableBridge.Stop()` now collects listener and transport shutdown failures and returns them with `errors.Join`, so callers can detect partial shutdown failures.
 
   **Code path**: `bridge.Stop()` → `_ = b.listener.Close()` and `_ = b.transport.Close()`.
 
   **Remediation**: Collect errors and return a combined error using `errors.Join()`. Validate with tests that verify error propagation.
 
-- [ ] **MEDIUM-2: ToxTransport.Close() ignores listener close error** — `transport.go:106` — **Error Handling** — The `Close` method discards the error from `t.listener.Close()`.
+- [x] **MEDIUM-2: ToxTransport.Close() ignores listener close error** — `transport.go:106` — **Error Handling** — `ToxTransport.Close()` now returns the listener close failure instead of discarding it.
 
   **Remediation**: Return the listener close error if non-nil. Validate with tests.
 
-- [ ] **MEDIUM-3: acceptLoop silently continues on Accept errors** — `bridge.go:73-77` — **Error Handling** — When `Accept()` returns an error that isn't context cancellation, the loop silently continues. This could mask transient errors or resource exhaustion conditions.
+- [x] **MEDIUM-3: acceptLoop silently continues on Accept errors** — `bridge.go:73-77` — **Error Handling** — `acceptLoop()` now logs unexpected `Accept()` failures before retrying and exits cleanly on listener closure instead of spinning silently.
 
   **Code path**: `acceptLoop()` receives error from `Accept()` → checks `ctx.Err()` only → continues silently.
 
   **Remediation**: Log Accept errors before continuing. Consider implementing exponential backoff for repeated errors to avoid tight error loops.
 
-- [ ] **MEDIUM-4: inbound channel has fixed buffer size of 16** — `listener.go:30` — **Resource/Performance** — The `inbound` channel is hardcoded to buffer 16 requests. Under high load, senders to this channel could block if Accept is slow. Since the channel is not configurable, there's no way to tune this for different deployment scenarios.
+- [x] **MEDIUM-4: inbound channel has fixed buffer size of 16** — `listener.go:30` — **Resource/Performance** — `Config` now exposes `InboundBufferSize`, and listener creation uses that value so deployments can tune inbound buffering.
 
   **Remediation**: Consider making channel buffer size configurable in Config, or document the limitation. Not critical since Tox friends list is typically small.
 
@@ -98,7 +98,7 @@
 
   **Remediation**: Either use the address parameter (parse public key from it) or remove it from the internal `dial` signature and document that `ClientPublicKey` in config determines the dial target.
 
-- [ ] **MEDIUM-6: acceptLoop creates detached context** — `bridge.go:61` — **Resource** — `Start()` creates `acceptCtx` from `context.Background()` instead of the provided `ctx`. This means the accept loop won't respond to cancellation of the parent context passed to `Start()`.
+- [x] **MEDIUM-6: acceptLoop creates detached context** — `bridge.go:61` — **Resource** — `Start()` now derives the accept loop context from the caller's context and closes the listener when that context is canceled, so bridge shutdown follows parent cancellation.
 
   **Code path**: `Start(ctx)` → `acceptCtx, cancel := context.WithCancel(context.Background())` ignores `ctx`.
 

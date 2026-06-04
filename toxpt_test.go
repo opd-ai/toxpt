@@ -7,6 +7,8 @@ import (
 	"io"
 	"log/slog"
 	"net"
+	"strings"
+	"sync"
 	"testing"
 	"time"
 
@@ -73,6 +75,12 @@ func TestConfigValidate(t *testing.T) {
 			c.Logger = nil
 			return c
 		}, wantErr: true},
+		{name: "negative inbound buffer", cfg: func(t *testing.T) Config {
+			c := validConfig(t)
+			defer c.ToxClient.Kill()
+			c.InboundBufferSize = -1
+			return c
+		}, wantErr: true},
 	}
 
 	for _, tt := range tests {
@@ -96,6 +104,9 @@ func TestDefaultConfig(t *testing.T) {
 	cfg := DefaultConfig()
 	if cfg.BridgeORPort == 0 {
 		t.Fatal("expected non-zero OR port")
+	}
+	if cfg.InboundBufferSize != 16 {
+		t.Fatalf("expected default inbound buffer size, got %d", cfg.InboundBufferSize)
 	}
 	if cfg.Logger == nil {
 		t.Fatal("expected default logger")
@@ -141,6 +152,36 @@ type stubFriendSource struct {
 func (s stubFriendSource) GetFriends() map[uint32]*toxcore.Friend {
 	return s.friends
 }
+
+type errListener struct {
+	err error
+}
+
+func (l errListener) Accept() (net.Conn, error) { return nil, net.ErrClosed }
+
+func (l errListener) Close() error { return l.err }
+
+func (l errListener) Addr() net.Addr { return &net.TCPAddr{} }
+
+type scriptedListener struct {
+	mu   sync.Mutex
+	errs []error
+}
+
+func (l *scriptedListener) Accept() (net.Conn, error) {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	if len(l.errs) == 0 {
+		return nil, net.ErrClosed
+	}
+	err := l.errs[0]
+	l.errs = l.errs[1:]
+	return nil, err
+}
+
+func (l *scriptedListener) Close() error { return nil }
+
+func (l *scriptedListener) Addr() net.Addr { return &net.TCPAddr{} }
 
 func TestNewFriendACLFromSource(t *testing.T) {
 	nilACL := newFriendACLFromSource(nil)
@@ -388,6 +429,81 @@ func TestBridgeStartStop(t *testing.T) {
 	}
 }
 
+func TestBridgeStopPropagatesCloseErrors(t *testing.T) {
+	listenerErr := errors.New("listener close")
+	transportErr := errors.New("transport close")
+	bridge := &EmbeddableBridge{
+		listener: errListener{err: listenerErr},
+		transport: &ToxTransport{
+			listener: &toxListener{
+				closed:   make(chan struct{}),
+				closeErr: transportErr,
+			},
+		},
+	}
+
+	err := bridge.Stop()
+	if err == nil {
+		t.Fatal("expected stop error")
+	}
+	if !errors.Is(err, listenerErr) {
+		t.Fatalf("expected listener close error, got %v", err)
+	}
+	if !errors.Is(err, transportErr) {
+		t.Fatalf("expected transport close error, got %v", err)
+	}
+}
+
+func TestBridgeStartClosesOnParentContextCancellation(t *testing.T) {
+	cfg := validConfig(t)
+	defer cfg.ToxClient.Kill()
+	bridge, err := NewEmbeddableBridge(cfg)
+	if err != nil {
+		t.Fatalf("NewEmbeddableBridge() error = %v", err)
+	}
+
+	ctx, cancel := context.WithCancel(context.Background())
+	if err := bridge.Start(ctx); err != nil {
+		t.Fatalf("Start() error = %v", err)
+	}
+
+	done := make(chan struct{})
+	go func() {
+		bridge.wg.Wait()
+		close(done)
+	}()
+
+	cancel()
+
+	select {
+	case <-done:
+	case <-time.After(time.Second):
+		t.Fatal("bridge accept loop did not stop after parent context cancellation")
+	}
+
+	if err := bridge.Stop(); err != nil {
+		t.Fatalf("Stop() error = %v", err)
+	}
+}
+
+func TestAcceptLoopLogsAcceptErrors(t *testing.T) {
+	cfg := validConfig(t)
+	defer cfg.ToxClient.Kill()
+	var logs bytes.Buffer
+	cfg.Logger = slog.New(slog.NewTextHandler(&logs, nil))
+	bridge := &EmbeddableBridge{
+		cfg:      cfg,
+		listener: &scriptedListener{errs: []error{errors.New("boom"), net.ErrClosed}},
+	}
+
+	bridge.wg.Add(1)
+	bridge.acceptLoop(context.Background())
+
+	if !strings.Contains(logs.String(), "accept failed") {
+		t.Fatalf("expected accept error log, got %q", logs.String())
+	}
+}
+
 func TestBridgeHandleConn(t *testing.T) {
 	cfg := validConfig(t)
 	defer cfg.ToxClient.Kill()
@@ -479,6 +595,30 @@ func TestWriteFramedTooLarge(t *testing.T) {
 	}
 }
 
+func TestTransportClosePropagatesListenerError(t *testing.T) {
+	cfg := validConfig(t)
+	defer cfg.ToxClient.Kill()
+	listenerErr := errors.New("listener close")
+	tr := &ToxTransport{
+		cfg: cfg,
+		listener: &toxListener{
+			closed:   make(chan struct{}),
+			closeErr: listenerErr,
+		},
+	}
+
+	err := tr.Close()
+	if err == nil {
+		t.Fatal("expected close error")
+	}
+	if !errors.Is(err, listenerErr) {
+		t.Fatalf("expected listener close error, got %v", err)
+	}
+	if tr.listener != nil {
+		t.Fatal("transport listener should be cleared after close")
+	}
+}
+
 func TestErrorHelpers(t *testing.T) {
 	base := errors.New("boom")
 	if err := wrapNetwork("msg", nil); err == nil {
@@ -502,8 +642,29 @@ func TestErrorHelpers(t *testing.T) {
 }
 
 func TestListenerAddr(t *testing.T) {
-	l := newToxListener("", NewFriendACL([][32]byte{mustKey(1)}), slog.Default())
+	l := newToxListener("", NewFriendACL([][32]byte{mustKey(1)}), slog.Default(), DefaultConfig().InboundBufferSize)
 	if l.Addr() == nil {
 		t.Fatal("expected listener address")
+	}
+}
+
+func TestListenUsesConfiguredInboundBufferSize(t *testing.T) {
+	cfg := validConfig(t)
+	defer cfg.ToxClient.Kill()
+	cfg.InboundBufferSize = 4
+	tr, err := NewTransport(cfg)
+	if err != nil {
+		t.Fatalf("NewTransport() error = %v", err)
+	}
+	if err := tr.Start(context.Background()); err != nil {
+		t.Fatalf("Start() error = %v", err)
+	}
+	defer tr.Close()
+
+	if _, err := tr.Listen(context.Background(), ""); err != nil {
+		t.Fatalf("Listen() error = %v", err)
+	}
+	if cap(tr.listener.inbound) != 4 {
+		t.Fatalf("unexpected inbound buffer size: %d", cap(tr.listener.inbound))
 	}
 }
