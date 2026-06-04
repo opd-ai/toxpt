@@ -4,15 +4,22 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+
+	"github.com/opd-ai/toxcore"
 )
 
 const defaultListenPort uint16 = 33445
 
 // Config configures Tox pluggable transport and bridge behavior.
 type Config struct {
-	ToxSecretKey    [32]byte
-	AllowedFriends  [][32]byte
-	ListenPort      uint16
+	// ToxClient is the existing Tox instance to use for transport.
+	// This allows toxpt to be embedded in a user-facing Tox client.
+	ToxClient *toxcore.Tox
+
+	// AllowedFriends specifies which Tox public keys can use the bridge.
+	// If nil or empty, the bridge will dynamically allow all friends from ToxClient.
+	AllowedFriends [][32]byte
+
 	BridgeORPort    uint16
 	ClientPublicKey [32]byte
 	Logger          *slog.Logger
@@ -21,7 +28,6 @@ type Config struct {
 // DefaultConfig returns a safe baseline configuration.
 func DefaultConfig() Config {
 	return Config{
-		ListenPort:   defaultListenPort,
 		BridgeORPort: 9001,
 		Logger:       slog.Default(),
 	}
@@ -29,18 +35,13 @@ func DefaultConfig() Config {
 
 // Validate validates the transport configuration.
 func (cfg Config) Validate() error {
-	if cfg.ToxSecretKey == ([32]byte{}) {
-		return fmt.Errorf("tox secret key is required: %w", ErrInvalidConfig)
-	}
-	if len(cfg.AllowedFriends) == 0 {
-		return fmt.Errorf("at least one allowed friend is required: %w", ErrInvalidConfig)
-	}
-	if cfg.ListenPort == 0 {
-		return fmt.Errorf("listen port must be non-zero: %w", ErrInvalidConfig)
+	if cfg.ToxClient == nil {
+		return fmt.Errorf("tox client is required: %w", ErrInvalidConfig)
 	}
 	if cfg.BridgeORPort == 0 {
 		return fmt.Errorf("bridge OR port must be non-zero: %w", ErrInvalidConfig)
 	}
+	// AllowedFriends can be empty - we'll use the client's friend list dynamically
 	for i, pk := range cfg.AllowedFriends {
 		if pk == ([32]byte{}) {
 			return fmt.Errorf("allowed friend at index %d is zero key: %w", i, ErrInvalidConfig)

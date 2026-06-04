@@ -20,11 +20,22 @@ func mustKey(b byte) [32]byte {
 	return k
 }
 
-func validConfig() Config {
+func createTestToxClient(t *testing.T) *toxcore.Tox {
+	t.Helper()
+	opts := toxcore.NewOptionsForTesting()
+	opts.StartPort = 0
+	opts.EndPort = 0
+	tox, err := toxcore.New(opts)
+	if err != nil {
+		t.Fatalf("toxcore.New() error = %v", err)
+	}
+	return tox
+}
+
+func validConfig(t *testing.T) Config {
 	return Config{
-		ToxSecretKey:   mustKey(1),
+		ToxClient:      createTestToxClient(t),
 		AllowedFriends: [][32]byte{mustKey(2)},
-		ListenPort:     33445,
 		BridgeORPort:   9001,
 		Logger:         slog.Default(),
 	}
@@ -33,19 +44,42 @@ func validConfig() Config {
 func TestConfigValidate(t *testing.T) {
 	tests := []struct {
 		name    string
-		cfg     Config
+		cfg     func(t *testing.T) Config
 		wantErr bool
 	}{
-		{name: "valid", cfg: validConfig()},
-		{name: "missing key", cfg: func() Config { c := validConfig(); c.ToxSecretKey = [32]byte{}; return c }(), wantErr: true},
-		{name: "empty allowed", cfg: func() Config { c := validConfig(); c.AllowedFriends = nil; return c }(), wantErr: true},
-		{name: "zero listen", cfg: func() Config { c := validConfig(); c.ListenPort = 0; return c }(), wantErr: true},
-		{name: "zero logger", cfg: func() Config { c := validConfig(); c.Logger = nil; return c }(), wantErr: true},
+		{name: "valid", cfg: validConfig},
+		{name: "missing client", cfg: func(t *testing.T) Config {
+			c := validConfig(t)
+			defer c.ToxClient.Kill()
+			c.ToxClient = nil
+			return c
+		}, wantErr: true},
+		{name: "empty allowed is ok", cfg: func(t *testing.T) Config {
+			c := validConfig(t)
+			c.AllowedFriends = nil
+			return c
+		}},
+		{name: "zero bridge port", cfg: func(t *testing.T) Config {
+			c := validConfig(t)
+			defer c.ToxClient.Kill()
+			c.BridgeORPort = 0
+			return c
+		}, wantErr: true},
+		{name: "zero logger", cfg: func(t *testing.T) Config {
+			c := validConfig(t)
+			defer c.ToxClient.Kill()
+			c.Logger = nil
+			return c
+		}, wantErr: true},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := tt.cfg.Validate()
+			cfg := tt.cfg(t)
+			if cfg.ToxClient != nil {
+				defer cfg.ToxClient.Kill()
+			}
+			err := cfg.Validate()
 			if tt.wantErr && err == nil {
 				t.Fatal("expected error")
 			}
@@ -58,9 +92,6 @@ func TestConfigValidate(t *testing.T) {
 
 func TestDefaultConfig(t *testing.T) {
 	cfg := DefaultConfig()
-	if cfg.ListenPort != defaultListenPort {
-		t.Fatalf("unexpected listen port: %d", cfg.ListenPort)
-	}
 	if cfg.BridgeORPort == 0 {
 		t.Fatal("expected non-zero OR port")
 	}
@@ -202,13 +233,13 @@ func TestApplyDeadlineHelpers(t *testing.T) {
 }
 
 func TestTransportDialUnauthorizedIsClosed(t *testing.T) {
-	cfg := validConfig()
+	cfg := validConfig(t)
+	defer cfg.ToxClient.Kill()
 	cfg.ClientPublicKey = mustKey(5)
 	tr, err := NewTransport(cfg)
 	if err != nil {
 		t.Fatalf("NewTransport() error = %v", err)
 	}
-	tr.newTox = func(*toxcore.Options) (*toxcore.Tox, error) { return nil, nil }
 	if err := tr.Start(context.Background()); err != nil {
 		t.Fatalf("Start() error = %v", err)
 	}
@@ -244,7 +275,8 @@ func TestTransportDialUnauthorizedIsClosed(t *testing.T) {
 }
 
 func TestTransportLifecycleAndInterfaceHelpers(t *testing.T) {
-	cfg := validConfig()
+	cfg := validConfig(t)
+	defer cfg.ToxClient.Kill()
 	tr, err := NewTransport(cfg)
 	if err != nil {
 		t.Fatalf("NewTransport() error = %v", err)
@@ -264,7 +296,6 @@ func TestTransportLifecycleAndInterfaceHelpers(t *testing.T) {
 	if _, err := tr.Listen(context.Background(), ""); err == nil {
 		t.Fatal("expected listen error when not running")
 	}
-	tr.newTox = func(*toxcore.Options) (*toxcore.Tox, error) { return nil, nil }
 	if err := tr.Start(context.Background()); err != nil {
 		t.Fatalf("Start() error = %v", err)
 	}
@@ -277,11 +308,12 @@ func TestTransportLifecycleAndInterfaceHelpers(t *testing.T) {
 }
 
 func TestDialWithoutListener(t *testing.T) {
-	tr, err := NewTransport(validConfig())
+	cfg := validConfig(t)
+	defer cfg.ToxClient.Kill()
+	tr, err := NewTransport(cfg)
 	if err != nil {
 		t.Fatalf("NewTransport() error = %v", err)
 	}
-	tr.newTox = func(*toxcore.Options) (*toxcore.Tox, error) { return nil, nil }
 	if err := tr.Start(context.Background()); err != nil {
 		t.Fatalf("Start() error = %v", err)
 	}
@@ -292,12 +324,12 @@ func TestDialWithoutListener(t *testing.T) {
 }
 
 func TestBridgeStartStop(t *testing.T) {
-	cfg := validConfig()
+	cfg := validConfig(t)
+	defer cfg.ToxClient.Kill()
 	bridge, err := NewEmbeddableBridge(cfg)
 	if err != nil {
 		t.Fatalf("NewEmbeddableBridge() error = %v", err)
 	}
-	bridge.transport.newTox = func(*toxcore.Options) (*toxcore.Tox, error) { return nil, nil }
 	if err := bridge.Start(context.Background()); err != nil {
 		t.Fatalf("Start() error = %v", err)
 	}
@@ -308,7 +340,9 @@ func TestBridgeStartStop(t *testing.T) {
 }
 
 func TestBridgeHandleConn(t *testing.T) {
-	bridge, err := NewEmbeddableBridge(validConfig())
+	cfg := validConfig(t)
+	defer cfg.ToxClient.Kill()
+	bridge, err := NewEmbeddableBridge(cfg)
 	if err != nil {
 		t.Fatalf("NewEmbeddableBridge() error = %v", err)
 	}
