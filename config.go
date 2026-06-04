@@ -21,6 +21,8 @@ type Config struct {
 	AllowedFriends [][32]byte
 
 	BridgeORPort    uint16
+	// ClientPublicKey is the Tox public key used to identify this client
+	// when dialing through the transport. Required for client-mode operation.
 	ClientPublicKey [32]byte
 	Logger          *slog.Logger
 }
