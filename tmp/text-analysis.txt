@@ -1,0 +1,296 @@
+
+Processing files: 1/8 (12.5%)Processing files: 2/8 (25.0%)Processing files: 3/8 (37.5%)Processing files: 4/8 (50.0%)Processing files: 5/8 (62.5%)Processing files: 6/8 (75.0%)Processing files: 7/8 (87.5%)Processing files: 8/8 (100.0%)Processing files: 8/8 (100.0%)=== GO SOURCE CODE STATISTICS REPORT ===
+Repository: /tmp/workspace/opd-ai/toxpt
+Generated: 2026-06-04 21:16:49
+Analysis Time: 8ms
+Files Processed: 8
+
+=== OVERVIEW ===
+Total Lines of Code: 304
+Total Functions: 16
+Total Methods: 19
+Total Structs: 7
+Total Interfaces: 1
+Total Packages: 1
+Total Files: 8
+
+=== FUNCTION ANALYSIS ===
+Function Statistics:
+  Average Function Length: 9.5 lines
+  Longest Function: dial (27 lines)
+  Functions > 50 lines: 0 (0.0%)
+  Functions > 100 lines: 0 (0.0%)
+  Average Complexity: 4.1
+  High Complexity (>10): 0 functions
+
+Top Complex Functions:
+Rank Function                  File                    Lines Complexity
+-----------------------------------------------------------------------
+   1 Accept                    listener.go                21       12.4
+   2 readFramed                framing.go                 21        8.8
+   3 Validate                  config.go                  16        8.8
+   4 dial                      dial.go                    27        8.3
+   5 writeFramed               framing.go                 24        7.0
+   6 NewTransport              transport.go               23        7.0
+   7 acceptLoop                bridge.go                  13        6.7
+   8 newFriendACLFromSource    auth.go                    12        6.2
+   9 applyWriteDeadlineFrom... framing.go                 11        6.2
+  10 applyReadDeadlineFromC... framing.go                 11        6.2
+
+=== COMPLEXITY ANALYSIS ===
+Top 10 Most Complex Functions:
+Function                       Package                 Lines Cyclomatic    Overall
+--------------------------------------------------------------------------------
+Accept                         toxpt                      21          8       12.4
+readFramed                     toxpt                      21          6        8.8
+Validate                       toxpt                      16          6        8.8
+dial                           toxpt                      27          6        8.3
+writeFramed                    toxpt                      24          5        7.0
+NewTransport                   toxpt                      23          5        7.0
+acceptLoop                     toxpt                      13          4        6.7
+newFriendACLFromSource         toxpt                      12          4        6.2
+applyWriteDeadlineFromContext  toxpt                      11          4        6.2
+applyReadDeadlineFromContext   toxpt                      11          4        6.2
+
+=== PACKAGE ANALYSIS ===
+Total Packages: 1
+Average Dependencies per Package: 7.0
+Average Files per Package: 8.0
+
+High Coupling Packages (>3 dependencies):
+  toxpt: 7 dependencies (coupling: 3.5)
+
+Low Cohesion Packages (<2.0 cohesion score):
+  toxpt: 1.1 cohesion, 8 files, 35 functions
+
+Largest Packages (by function count):
+  toxpt: 35 functions, 8 structs, 0 interfaces, 8 files
+
+=== CIRCULAR DEPENDENCIES ===
+No circular dependencies detected.
+
+=== NAMING CONVENTION ANALYSIS ===
+File Name Violations: 1
+Identifier Violations: 0
+Package Name Violations: 1
+Overall Naming Score: 0.93
+
+Package Name Violations:
+Package              Violation            Description                             
+--------------------------------------------------------------------------------
+toxpt                directory_mismatch   Package name does not match directory...
+
+Top 1 File Name Violations:
+File                                     Violation            Suggested Name                
+--------------------------------------------------------------------------------
+errors.go                                generic_name                                       
+
+=== PLACEMENT ANALYSIS ===
+Misplaced Functions: 11
+Misplaced Methods: 1
+Low Cohesion Files: 1
+Average File Cohesion: 0.49
+
+Top 10 Misplaced Functions:
+Function                       Current File              Suggested File            Affinity Gain
+--------------------------------------------------------------------------------
+NewFriendACLFromTox            auth.go                   transport.go              +1.00
+newFramedConn                  framing.go                dial.go                   +1.00
+joinErr                        errors.go                 bridge.go                 +1.00
+DefaultConfig                  config.go                 transport.go              +1.00
+NewTransport                   transport.go              bridge.go                 +1.00
+newToxListener                 listener.go               transport.go              +1.00
+wrapProtocol                   errors.go                 framing.go                +1.00
+wrapConfig                     errors.go                 transport.go              +1.00
+ErrInvalidConfig               errors.go                 config.go                 +0.75
+ErrNotRunning                  errors.go                 transport.go              +0.67
+
+Top 1 Misplaced Methods:
+Method                         Receiver Type        Current File              Receiver File            
+--------------------------------------------------------------------------------
+ToxTransport.dial              ToxTransport         dial.go                   transport.go             
+
+Top 1 Low Cohesion Files:
+File                                     Cohesion     Suggested Splits
+--------------------------------------------------------------------------------
+dial.go                                  0.00         transport_related.go (+1 more)
+
+=== DOCUMENTATION ANALYSIS ===
+Overall Coverage: 48.0%
+Package Coverage: 0.0%
+Function Coverage: 100.0%
+Type Coverage: 100.0%
+Method Coverage: 18.8%
+
+
+=== MAINTENANCE BURDEN ===
+Magic Numbers: 81
+Dead Code (Unreferenced): 0 functions
+Dead Code (Unreachable): 0 blocks
+Dead Code Percentage: 0.00%
+Complex Signatures: 0
+Deeply Nested Functions: 0
+Feature Envy Methods: 0
+
+Top 10 Magic Numbers:
+Value                File                               Line Context
+--------------------------------------------------------------------------------
+"context"            /tmp/workspace/opd-ai/toxpt...        4 expression
+"net"                /tmp/workspace/opd-ai/toxpt...        5 expression
+"transport listen... /tmp/workspace/opd-ai/toxpt...       15 return
+"dial canceled"      /tmp/workspace/opd-ai/toxpt...       28 return
+"listener closed"    /tmp/workspace/opd-ai/toxpt...       32 return
+"fmt"                /tmp/workspace/opd-ai/toxpt...        4 expression
+"github.com/opd-a... /tmp/workspace/opd-ai/toxpt...        6 expression
+"invalid toxpt co... /tmp/workspace/opd-ai/toxpt...       10 function_call
+"unauthorized tox... /tmp/workspace/opd-ai/toxpt...       11 function_call
+"transport not ru... /tmp/workspace/opd-ai/toxpt...       12 function_call
+
+
+=== REFACTORING SUGGESTIONS ===
+Total Suggestions: 22 (sorted by impact/effort ratio)
+
+1. [placement] Move to transport.go for better cohesion
+   Target: NewFriendACLFromTox
+   Location: auth.go
+   Effort: low (10 lines affected)
+   MBI Impact: 10.0 points
+   ROI Score: 20.00 (higher = better)
+
+2. [placement] Move to transport.go for better cohesion
+   Target: wrapConfig
+   Location: errors.go
+   Effort: low (10 lines affected)
+   MBI Impact: 10.0 points
+   ROI Score: 20.00 (higher = better)
+
+3. [placement] Move to framing.go for better cohesion
+   Target: wrapProtocol
+   Location: errors.go
+   Effort: low (10 lines affected)
+   MBI Impact: 10.0 points
+   ROI Score: 20.00 (higher = better)
+
+4. [placement] Move to transport.go for better cohesion
+   Target: newToxListener
+   Location: listener.go
+   Effort: low (10 lines affected)
+   MBI Impact: 10.0 points
+   ROI Score: 20.00 (higher = better)
+
+5. [placement] Move to bridge.go for better cohesion
+   Target: NewTransport
+   Location: transport.go
+   Effort: low (10 lines affected)
+   MBI Impact: 10.0 points
+   ROI Score: 20.00 (higher = better)
+
+6. [placement] Move to transport.go for better cohesion
+   Target: DefaultConfig
+   Location: config.go
+   Effort: low (10 lines affected)
+   MBI Impact: 10.0 points
+   ROI Score: 20.00 (higher = better)
+
+7. [placement] Move to bridge.go for better cohesion
+   Target: joinErr
+   Location: errors.go
+   Effort: low (10 lines affected)
+   MBI Impact: 10.0 points
+   ROI Score: 20.00 (higher = better)
+
+8. [placement] Move to dial.go for better cohesion
+   Target: newFramedConn
+   Location: framing.go
+   Effort: low (10 lines affected)
+   MBI Impact: 10.0 points
+   ROI Score: 20.00 (higher = better)
+
+9. [placement] Move to config.go for better cohesion
+   Target: ErrInvalidConfig
+   Location: errors.go
+   Effort: low (10 lines affected)
+   MBI Impact: 7.5 points
+   ROI Score: 15.00 (higher = better)
+
+10. [placement] Move to transport.go for better cohesion
+   Target: ErrNotRunning
+   Location: errors.go
+   Effort: low (10 lines affected)
+   MBI Impact: 6.7 points
+   ROI Score: 13.33 (higher = better)
+
+11. [placement] Move to framing.go for better cohesion
+   Target: wrapNetwork
+   Location: errors.go
+   Effort: low (10 lines affected)
+   MBI Impact: 5.8 points
+   ROI Score: 11.67 (higher = better)
+
+12. [documentation] Add GoDoc comment for exported function Name
+   Target: Name
+   Location: transport.go:55
+   Effort: low (3 lines affected)
+   MBI Impact: 5.0 points
+   ROI Score: 10.00 (higher = better)
+
+13. [documentation] Add GoDoc comment for exported function Close
+   Target: Close
+   Location: transport.go:102
+   Effort: low (3 lines affected)
+   MBI Impact: 5.0 points
+   ROI Score: 10.00 (higher = better)
+
+14. [documentation] Add GoDoc comment for exported function Listen
+   Target: Listen
+   Location: transport.go:90
+   Effort: low (3 lines affected)
+   MBI Impact: 5.0 points
+   ROI Score: 10.00 (higher = better)
+
+15. [documentation] Add GoDoc comment for exported function Dial
+   Target: Dial
+   Location: transport.go:83
+   Effort: low (3 lines affected)
+   MBI Impact: 5.0 points
+   ROI Score: 10.00 (higher = better)
+
+16. [documentation] Add GoDoc comment for exported function IsRunning
+   Target: IsRunning
+   Location: transport.go:59
+   Effort: low (3 lines affected)
+   MBI Impact: 5.0 points
+   ROI Score: 10.00 (higher = better)
+
+17. [documentation] Add GoDoc comment for exported function Methods
+   Target: Methods
+   Location: transport.go:57
+   Effort: low (3 lines affected)
+   MBI Impact: 5.0 points
+   ROI Score: 10.00 (higher = better)
+
+18. [documentation] Add GoDoc comment for exported function Accept
+   Target: Accept
+   Location: listener.go:35
+   Effort: low (3 lines affected)
+   MBI Impact: 5.0 points
+   ROI Score: 10.00 (higher = better)
+
+19. [documentation] Add GoDoc comment for exported function Write
+   Target: Write
+   Location: framing.go:97
+   Effort: low (3 lines affected)
+   MBI Impact: 5.0 points
+   ROI Score: 10.00 (higher = better)
+
+20. [documentation] Add GoDoc comment for exported function Read
+   Target: Read
+   Location: framing.go:80
+   Effort: low (3 lines affected)
+   MBI Impact: 5.0 points
+   ROI Score: 10.00 (higher = better)
+
+... and 2 more suggestions (use JSON output for full list)
+
+=== ANALYSIS COMPLETE ===
+Report generated by go-stats-generator v1.0.0

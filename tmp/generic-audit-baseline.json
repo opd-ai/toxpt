@@ -1,0 +1,2421 @@
+{
+  "metadata": {
+    "repository": "/tmp/workspace/opd-ai/toxpt",
+    "generated_at": "2026-06-04T21:16:45.617347485Z",
+    "analysis_time": 8565131,
+    "files_processed": 8,
+    "tool_version": "1.0.0",
+    "go_version": ""
+  },
+  "overview": {
+    "total_lines_of_code": 304,
+    "total_functions": 16,
+    "total_methods": 19,
+    "total_structs": 7,
+    "total_interfaces": 1,
+    "total_packages": 1,
+    "total_files": 8
+  },
+  "functions": [
+    {
+      "name": "dial",
+      "package": "toxpt",
+      "file": "dial.go",
+      "line": 8,
+      "is_exported": false,
+      "is_method": true,
+      "receiver_type": "*ToxTransport",
+      "lines": {
+        "total": 27,
+        "code": 24,
+        "comments": 0,
+        "blank": 3
+      },
+      "signature": {
+        "parameter_count": 2,
+        "return_count": 2,
+        "has_variadic": false,
+        "returns_error": true,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 1.6
+      },
+      "complexity": {
+        "cyclomatic": 6,
+        "cognitive": 6,
+        "nesting_depth": 1,
+        "overall": 8.3
+      },
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    },
+    {
+      "name": "DefaultConfig",
+      "package": "toxpt",
+      "file": "config.go",
+      "line": 29,
+      "is_exported": true,
+      "is_method": false,
+      "lines": {
+        "total": 4,
+        "code": 4,
+        "comments": 0,
+        "blank": 0
+      },
+      "signature": {
+        "parameter_count": 0,
+        "return_count": 1,
+        "has_variadic": false,
+        "returns_error": false,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 0.3
+      },
+      "complexity": {
+        "cyclomatic": 1,
+        "cognitive": 1,
+        "nesting_depth": 0,
+        "overall": 1.3
+      },
+      "documentation": {
+        "has_comment": true,
+        "comment_length": 53,
+        "has_example": false,
+        "quality_score": 0.31200000000000006
+      }
+    },
+    {
+      "name": "Validate",
+      "package": "toxpt",
+      "file": "config.go",
+      "line": 37,
+      "is_exported": true,
+      "is_method": true,
+      "receiver_type": "Config",
+      "lines": {
+        "total": 16,
+        "code": 15,
+        "comments": 1,
+        "blank": 0
+      },
+      "signature": {
+        "parameter_count": 0,
+        "return_count": 1,
+        "has_variadic": false,
+        "returns_error": true,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 0.3
+      },
+      "complexity": {
+        "cyclomatic": 6,
+        "cognitive": 6,
+        "nesting_depth": 2,
+        "overall": 8.8
+      },
+      "documentation": {
+        "has_comment": true,
+        "comment_length": 48,
+        "has_example": false,
+        "quality_score": 0.192
+      }
+    },
+    {
+      "name": "NewFriendACL",
+      "package": "toxpt",
+      "file": "auth.go",
+      "line": 21,
+      "is_exported": true,
+      "is_method": false,
+      "lines": {
+        "total": 3,
+        "code": 3,
+        "comments": 0,
+        "blank": 0
+      },
+      "signature": {
+        "parameter_count": 1,
+        "return_count": 1,
+        "has_variadic": false,
+        "returns_error": false,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 0.8
+      },
+      "complexity": {
+        "cyclomatic": 1,
+        "cognitive": 1,
+        "nesting_depth": 0,
+        "overall": 1.3
+      },
+      "documentation": {
+        "has_comment": true,
+        "comment_length": 63,
+        "has_example": false,
+        "quality_score": 0.252
+      }
+    },
+    {
+      "name": "NewFriendACLFromTox",
+      "package": "toxpt",
+      "file": "auth.go",
+      "line": 28,
+      "is_exported": true,
+      "is_method": false,
+      "lines": {
+        "total": 4,
+        "code": 4,
+        "comments": 0,
+        "blank": 0
+      },
+      "signature": {
+        "parameter_count": 1,
+        "return_count": 1,
+        "has_variadic": false,
+        "returns_error": false,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 0.8
+      },
+      "complexity": {
+        "cyclomatic": 2,
+        "cognitive": 2,
+        "nesting_depth": 1,
+        "overall": 3.1
+      },
+      "documentation": {
+        "has_comment": true,
+        "comment_length": 78,
+        "has_example": false,
+        "quality_score": 0.31200000000000006
+      }
+    },
+    {
+      "name": "newFriendACLFromSource",
+      "package": "toxpt",
+      "file": "auth.go",
+      "line": 35,
+      "is_exported": false,
+      "is_method": false,
+      "lines": {
+        "total": 12,
+        "code": 12,
+        "comments": 0,
+        "blank": 0
+      },
+      "signature": {
+        "parameter_count": 1,
+        "return_count": 1,
+        "has_variadic": false,
+        "returns_error": false,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 0.8
+      },
+      "complexity": {
+        "cyclomatic": 4,
+        "cognitive": 4,
+        "nesting_depth": 2,
+        "overall": 6.2
+      },
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    },
+    {
+      "name": "IsAuthorized",
+      "package": "toxpt",
+      "file": "auth.go",
+      "line": 51,
+      "is_exported": true,
+      "is_method": true,
+      "receiver_type": "*FriendACL",
+      "lines": {
+        "total": 8,
+        "code": 7,
+        "comments": 0,
+        "blank": 1
+      },
+      "signature": {
+        "parameter_count": 1,
+        "return_count": 1,
+        "has_variadic": false,
+        "returns_error": false,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 0.8
+      },
+      "complexity": {
+        "cyclomatic": 2,
+        "cognitive": 2,
+        "nesting_depth": 1,
+        "overall": 3.1
+      },
+      "documentation": {
+        "has_comment": true,
+        "comment_length": 69,
+        "has_example": false,
+        "quality_score": 0.27599999999999997
+      }
+    },
+    {
+      "name": "wrapNetwork",
+      "package": "toxpt",
+      "file": "errors.go",
+      "line": 15,
+      "is_exported": false,
+      "is_method": false,
+      "lines": {
+        "total": 4,
+        "code": 4,
+        "comments": 0,
+        "blank": 0
+      },
+      "signature": {
+        "parameter_count": 2,
+        "return_count": 1,
+        "has_variadic": false,
+        "returns_error": true,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 1.3
+      },
+      "complexity": {
+        "cyclomatic": 2,
+        "cognitive": 2,
+        "nesting_depth": 1,
+        "overall": 3.1
+      },
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    },
+    {
+      "name": "wrapProtocol",
+      "package": "toxpt",
+      "file": "errors.go",
+      "line": 22,
+      "is_exported": false,
+      "is_method": false,
+      "lines": {
+        "total": 4,
+        "code": 4,
+        "comments": 0,
+        "blank": 0
+      },
+      "signature": {
+        "parameter_count": 2,
+        "return_count": 1,
+        "has_variadic": false,
+        "returns_error": true,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 1.3
+      },
+      "complexity": {
+        "cyclomatic": 2,
+        "cognitive": 2,
+        "nesting_depth": 1,
+        "overall": 3.1
+      },
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    },
+    {
+      "name": "wrapConfig",
+      "package": "toxpt",
+      "file": "errors.go",
+      "line": 29,
+      "is_exported": false,
+      "is_method": false,
+      "lines": {
+        "total": 4,
+        "code": 4,
+        "comments": 0,
+        "blank": 0
+      },
+      "signature": {
+        "parameter_count": 2,
+        "return_count": 1,
+        "has_variadic": false,
+        "returns_error": true,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 1.3
+      },
+      "complexity": {
+        "cyclomatic": 2,
+        "cognitive": 2,
+        "nesting_depth": 1,
+        "overall": 3.1
+      },
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    },
+    {
+      "name": "joinErr",
+      "package": "toxpt",
+      "file": "errors.go",
+      "line": 36,
+      "is_exported": false,
+      "is_method": false,
+      "lines": {
+        "total": 4,
+        "code": 4,
+        "comments": 0,
+        "blank": 0
+      },
+      "signature": {
+        "parameter_count": 2,
+        "return_count": 1,
+        "has_variadic": false,
+        "returns_error": true,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 1.3
+      },
+      "complexity": {
+        "cyclomatic": 2,
+        "cognitive": 2,
+        "nesting_depth": 1,
+        "overall": 3.1
+      },
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    },
+    {
+      "name": "newToxListener",
+      "package": "toxpt",
+      "file": "listener.go",
+      "line": 25,
+      "is_exported": false,
+      "is_method": false,
+      "lines": {
+        "total": 7,
+        "code": 7,
+        "comments": 0,
+        "blank": 0
+      },
+      "signature": {
+        "parameter_count": 3,
+        "return_count": 1,
+        "has_variadic": false,
+        "returns_error": false,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 1.8
+      },
+      "complexity": {
+        "cyclomatic": 1,
+        "cognitive": 1,
+        "nesting_depth": 0,
+        "overall": 1.3
+      },
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    },
+    {
+      "name": "Accept",
+      "package": "toxpt",
+      "file": "listener.go",
+      "line": 35,
+      "is_exported": true,
+      "is_method": true,
+      "receiver_type": "*toxListener",
+      "lines": {
+        "total": 21,
+        "code": 21,
+        "comments": 0,
+        "blank": 0
+      },
+      "signature": {
+        "parameter_count": 0,
+        "return_count": 2,
+        "has_variadic": false,
+        "returns_error": true,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 0.6
+      },
+      "complexity": {
+        "cyclomatic": 8,
+        "cognitive": 8,
+        "nesting_depth": 4,
+        "overall": 12.4
+      },
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    },
+    {
+      "name": "Close",
+      "package": "toxpt",
+      "file": "listener.go",
+      "line": 59,
+      "is_exported": true,
+      "is_method": true,
+      "receiver_type": "*toxListener",
+      "lines": {
+        "total": 4,
+        "code": 4,
+        "comments": 0,
+        "blank": 0
+      },
+      "signature": {
+        "parameter_count": 0,
+        "return_count": 1,
+        "has_variadic": false,
+        "returns_error": true,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 0.3
+      },
+      "complexity": {
+        "cyclomatic": 1,
+        "cognitive": 1,
+        "nesting_depth": 0,
+        "overall": 1.3
+      },
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    },
+    {
+      "name": "Addr",
+      "package": "toxpt",
+      "file": "listener.go",
+      "line": 66,
+      "is_exported": true,
+      "is_method": true,
+      "receiver_type": "*toxListener",
+      "lines": {
+        "total": 1,
+        "code": 1,
+        "comments": 0,
+        "blank": 0
+      },
+      "signature": {
+        "parameter_count": 0,
+        "return_count": 1,
+        "has_variadic": false,
+        "returns_error": false,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 0.3
+      },
+      "complexity": {
+        "cyclomatic": 1,
+        "cognitive": 1,
+        "nesting_depth": 0,
+        "overall": 1.3
+      },
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    },
+    {
+      "name": "NewTransport",
+      "package": "toxpt",
+      "file": "transport.go",
+      "line": 29,
+      "is_exported": true,
+      "is_method": false,
+      "lines": {
+        "total": 23,
+        "code": 20,
+        "comments": 1,
+        "blank": 2
+      },
+      "signature": {
+        "parameter_count": 1,
+        "return_count": 2,
+        "has_variadic": false,
+        "returns_error": true,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 1.1
+      },
+      "complexity": {
+        "cyclomatic": 5,
+        "cognitive": 5,
+        "nesting_depth": 1,
+        "overall": 7
+      },
+      "documentation": {
+        "has_comment": true,
+        "comment_length": 126,
+        "has_example": false,
+        "quality_score": 0.4
+      }
+    },
+    {
+      "name": "Name",
+      "package": "toxpt",
+      "file": "transport.go",
+      "line": 55,
+      "is_exported": true,
+      "is_method": true,
+      "receiver_type": "*ToxTransport",
+      "lines": {
+        "total": 0,
+        "code": 0,
+        "comments": 0,
+        "blank": 0
+      },
+      "signature": {
+        "parameter_count": 0,
+        "return_count": 1,
+        "has_variadic": false,
+        "returns_error": false,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 0.3
+      },
+      "complexity": {
+        "cyclomatic": 1,
+        "cognitive": 1,
+        "nesting_depth": 0,
+        "overall": 1.3
+      },
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    },
+    {
+      "name": "Methods",
+      "package": "toxpt",
+      "file": "transport.go",
+      "line": 57,
+      "is_exported": true,
+      "is_method": true,
+      "receiver_type": "*ToxTransport",
+      "lines": {
+        "total": 0,
+        "code": 0,
+        "comments": 0,
+        "blank": 0
+      },
+      "signature": {
+        "parameter_count": 0,
+        "return_count": 1,
+        "has_variadic": false,
+        "returns_error": false,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 0.3
+      },
+      "complexity": {
+        "cyclomatic": 1,
+        "cognitive": 1,
+        "nesting_depth": 0,
+        "overall": 1.3
+      },
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    },
+    {
+      "name": "IsRunning",
+      "package": "toxpt",
+      "file": "transport.go",
+      "line": 59,
+      "is_exported": true,
+      "is_method": true,
+      "receiver_type": "*ToxTransport",
+      "lines": {
+        "total": 0,
+        "code": 0,
+        "comments": 0,
+        "blank": 0
+      },
+      "signature": {
+        "parameter_count": 0,
+        "return_count": 1,
+        "has_variadic": false,
+        "returns_error": false,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 0.3
+      },
+      "complexity": {
+        "cyclomatic": 1,
+        "cognitive": 1,
+        "nesting_depth": 0,
+        "overall": 1.3
+      },
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    },
+    {
+      "name": "Start",
+      "package": "toxpt",
+      "file": "transport.go",
+      "line": 62,
+      "is_exported": true,
+      "is_method": true,
+      "receiver_type": "*ToxTransport",
+      "lines": {
+        "total": 18,
+        "code": 13,
+        "comments": 1,
+        "blank": 4
+      },
+      "signature": {
+        "parameter_count": 1,
+        "return_count": 1,
+        "has_variadic": false,
+        "returns_error": true,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 0.8
+      },
+      "complexity": {
+        "cyclomatic": 4,
+        "cognitive": 4,
+        "nesting_depth": 1,
+        "overall": 5.7
+      },
+      "documentation": {
+        "has_comment": true,
+        "comment_length": 77,
+        "has_example": false,
+        "quality_score": 0.30800000000000005
+      }
+    },
+    {
+      "name": "Dial",
+      "package": "toxpt",
+      "file": "transport.go",
+      "line": 83,
+      "is_exported": true,
+      "is_method": true,
+      "receiver_type": "*ToxTransport",
+      "lines": {
+        "total": 4,
+        "code": 4,
+        "comments": 0,
+        "blank": 0
+      },
+      "signature": {
+        "parameter_count": 2,
+        "return_count": 2,
+        "has_variadic": false,
+        "returns_error": true,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 1.6
+      },
+      "complexity": {
+        "cyclomatic": 2,
+        "cognitive": 2,
+        "nesting_depth": 1,
+        "overall": 3.1
+      },
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    },
+    {
+      "name": "Listen",
+      "package": "toxpt",
+      "file": "transport.go",
+      "line": 90,
+      "is_exported": true,
+      "is_method": true,
+      "receiver_type": "*ToxTransport",
+      "lines": {
+        "total": 9,
+        "code": 8,
+        "comments": 0,
+        "blank": 1
+      },
+      "signature": {
+        "parameter_count": 2,
+        "return_count": 2,
+        "has_variadic": false,
+        "returns_error": true,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 1.6
+      },
+      "complexity": {
+        "cyclomatic": 2,
+        "cognitive": 2,
+        "nesting_depth": 1,
+        "overall": 3.1
+      },
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    },
+    {
+      "name": "Close",
+      "package": "toxpt",
+      "file": "transport.go",
+      "line": 102,
+      "is_exported": true,
+      "is_method": true,
+      "receiver_type": "*ToxTransport",
+      "lines": {
+        "total": 9,
+        "code": 8,
+        "comments": 1,
+        "blank": 0
+      },
+      "signature": {
+        "parameter_count": 0,
+        "return_count": 1,
+        "has_variadic": false,
+        "returns_error": true,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 0.3
+      },
+      "complexity": {
+        "cyclomatic": 2,
+        "cognitive": 2,
+        "nesting_depth": 1,
+        "overall": 3.1
+      },
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    },
+    {
+      "name": "writeFramed",
+      "package": "toxpt",
+      "file": "framing.go",
+      "line": 19,
+      "is_exported": false,
+      "is_method": false,
+      "lines": {
+        "total": 24,
+        "code": 20,
+        "comments": 0,
+        "blank": 4
+      },
+      "signature": {
+        "parameter_count": 3,
+        "return_count": 1,
+        "has_variadic": false,
+        "returns_error": true,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 1.8
+      },
+      "complexity": {
+        "cyclomatic": 5,
+        "cognitive": 5,
+        "nesting_depth": 1,
+        "overall": 7
+      },
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    },
+    {
+      "name": "readFramed",
+      "package": "toxpt",
+      "file": "framing.go",
+      "line": 46,
+      "is_exported": false,
+      "is_method": false,
+      "lines": {
+        "total": 21,
+        "code": 19,
+        "comments": 0,
+        "blank": 2
+      },
+      "signature": {
+        "parameter_count": 2,
+        "return_count": 2,
+        "has_variadic": false,
+        "returns_error": true,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 1.6
+      },
+      "complexity": {
+        "cyclomatic": 6,
+        "cognitive": 6,
+        "nesting_depth": 2,
+        "overall": 8.8
+      },
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    },
+    {
+      "name": "newFramedConn",
+      "package": "toxpt",
+      "file": "framing.go",
+      "line": 76,
+      "is_exported": false,
+      "is_method": false,
+      "lines": {
+        "total": 1,
+        "code": 1,
+        "comments": 0,
+        "blank": 0
+      },
+      "signature": {
+        "parameter_count": 1,
+        "return_count": 1,
+        "has_variadic": false,
+        "returns_error": false,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 0.8
+      },
+      "complexity": {
+        "cyclomatic": 1,
+        "cognitive": 1,
+        "nesting_depth": 0,
+        "overall": 1.3
+      },
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    },
+    {
+      "name": "Read",
+      "package": "toxpt",
+      "file": "framing.go",
+      "line": 80,
+      "is_exported": true,
+      "is_method": true,
+      "receiver_type": "*framedConn",
+      "lines": {
+        "total": 14,
+        "code": 12,
+        "comments": 0,
+        "blank": 2
+      },
+      "signature": {
+        "parameter_count": 1,
+        "return_count": 2,
+        "has_variadic": false,
+        "returns_error": true,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 1.1
+      },
+      "complexity": {
+        "cyclomatic": 3,
+        "cognitive": 3,
+        "nesting_depth": 2,
+        "overall": 4.9
+      },
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    },
+    {
+      "name": "Write",
+      "package": "toxpt",
+      "file": "framing.go",
+      "line": 97,
+      "is_exported": true,
+      "is_method": true,
+      "receiver_type": "*framedConn",
+      "lines": {
+        "total": 4,
+        "code": 4,
+        "comments": 0,
+        "blank": 0
+      },
+      "signature": {
+        "parameter_count": 1,
+        "return_count": 2,
+        "has_variadic": false,
+        "returns_error": true,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 1.1
+      },
+      "complexity": {
+        "cyclomatic": 2,
+        "cognitive": 2,
+        "nesting_depth": 1,
+        "overall": 3.1
+      },
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    },
+    {
+      "name": "applyReadDeadlineFromContext",
+      "package": "toxpt",
+      "file": "framing.go",
+      "line": 104,
+      "is_exported": false,
+      "is_method": false,
+      "lines": {
+        "total": 11,
+        "code": 11,
+        "comments": 0,
+        "blank": 0
+      },
+      "signature": {
+        "parameter_count": 2,
+        "return_count": 1,
+        "has_variadic": false,
+        "returns_error": true,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 1.3
+      },
+      "complexity": {
+        "cyclomatic": 4,
+        "cognitive": 4,
+        "nesting_depth": 2,
+        "overall": 6.2
+      },
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    },
+    {
+      "name": "applyWriteDeadlineFromContext",
+      "package": "toxpt",
+      "file": "framing.go",
+      "line": 118,
+      "is_exported": false,
+      "is_method": false,
+      "lines": {
+        "total": 11,
+        "code": 11,
+        "comments": 0,
+        "blank": 0
+      },
+      "signature": {
+        "parameter_count": 2,
+        "return_count": 1,
+        "has_variadic": false,
+        "returns_error": true,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 1.3
+      },
+      "complexity": {
+        "cyclomatic": 4,
+        "cognitive": 4,
+        "nesting_depth": 2,
+        "overall": 6.2
+      },
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    },
+    {
+      "name": "NewEmbeddableBridge",
+      "package": "toxpt",
+      "file": "bridge.go",
+      "line": 29,
+      "is_exported": true,
+      "is_method": false,
+      "lines": {
+        "total": 15,
+        "code": 13,
+        "comments": 0,
+        "blank": 2
+      },
+      "signature": {
+        "parameter_count": 1,
+        "return_count": 2,
+        "has_variadic": false,
+        "returns_error": true,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 1.1
+      },
+      "complexity": {
+        "cyclomatic": 2,
+        "cognitive": 2,
+        "nesting_depth": 1,
+        "overall": 3.1
+      },
+      "documentation": {
+        "has_comment": true,
+        "comment_length": 66,
+        "has_example": false,
+        "quality_score": 0.264
+      }
+    },
+    {
+      "name": "Start",
+      "package": "toxpt",
+      "file": "bridge.go",
+      "line": 48,
+      "is_exported": true,
+      "is_method": true,
+      "receiver_type": "*EmbeddableBridge",
+      "lines": {
+        "total": 18,
+        "code": 15,
+        "comments": 0,
+        "blank": 3
+      },
+      "signature": {
+        "parameter_count": 1,
+        "return_count": 1,
+        "has_variadic": false,
+        "returns_error": true,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 0.8
+      },
+      "complexity": {
+        "cyclomatic": 3,
+        "cognitive": 3,
+        "nesting_depth": 1,
+        "overall": 4.4
+      },
+      "documentation": {
+        "has_comment": true,
+        "comment_length": 35,
+        "has_example": false,
+        "quality_score": 0.13999999999999999
+      }
+    },
+    {
+      "name": "acceptLoop",
+      "package": "toxpt",
+      "file": "bridge.go",
+      "line": 69,
+      "is_exported": false,
+      "is_method": true,
+      "receiver_type": "*EmbeddableBridge",
+      "lines": {
+        "total": 13,
+        "code": 13,
+        "comments": 0,
+        "blank": 0
+      },
+      "signature": {
+        "parameter_count": 1,
+        "return_count": 0,
+        "has_variadic": false,
+        "returns_error": false,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 0.5
+      },
+      "complexity": {
+        "cyclomatic": 4,
+        "cognitive": 4,
+        "nesting_depth": 3,
+        "overall": 6.7
+      },
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    },
+    {
+      "name": "handleConn",
+      "package": "toxpt",
+      "file": "bridge.go",
+      "line": 85,
+      "is_exported": false,
+      "is_method": true,
+      "receiver_type": "*EmbeddableBridge",
+      "lines": {
+        "total": 6,
+        "code": 5,
+        "comments": 0,
+        "blank": 1
+      },
+      "signature": {
+        "parameter_count": 2,
+        "return_count": 0,
+        "has_variadic": false,
+        "returns_error": false,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 1
+      },
+      "complexity": {
+        "cyclomatic": 1,
+        "cognitive": 1,
+        "nesting_depth": 0,
+        "overall": 1.3
+      },
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    },
+    {
+      "name": "Stop",
+      "package": "toxpt",
+      "file": "bridge.go",
+      "line": 95,
+      "is_exported": true,
+      "is_method": true,
+      "receiver_type": "*EmbeddableBridge",
+      "lines": {
+        "total": 9,
+        "code": 9,
+        "comments": 0,
+        "blank": 0
+      },
+      "signature": {
+        "parameter_count": 0,
+        "return_count": 1,
+        "has_variadic": false,
+        "returns_error": true,
+        "interface_parameters": 0,
+        "generic_parameters": null,
+        "signature_complexity": 0.3
+      },
+      "complexity": {
+        "cyclomatic": 3,
+        "cognitive": 3,
+        "nesting_depth": 1,
+        "overall": 4.4
+      },
+      "documentation": {
+        "has_comment": true,
+        "comment_length": 67,
+        "has_example": false,
+        "quality_score": 0.268
+      }
+    }
+  ],
+  "structs": [
+    {
+      "name": "Config",
+      "package": "toxpt",
+      "file": "config.go",
+      "line": 14,
+      "is_exported": true,
+      "total_fields": 5,
+      "fields_by_type": {
+        "pointer": 2,
+        "primitive": 1,
+        "slice": 2
+      },
+      "embedded_types": null,
+      "methods": [
+        {
+          "name": "Validate",
+          "is_exported": true,
+          "is_pointer_receiver": false,
+          "signature": {
+            "parameter_count": 0,
+            "return_count": 1,
+            "has_variadic": false,
+            "returns_error": true,
+            "interface_parameters": 0,
+            "generic_parameters": null,
+            "signature_complexity": 0.3
+          },
+          "lines": {
+            "total": 16,
+            "code": 11,
+            "comments": 3,
+            "blank": 2
+          },
+          "complexity": {
+            "cyclomatic": 6,
+            "cognitive": 0,
+            "nesting_depth": 5,
+            "overall": 8.5
+          },
+          "documentation": {
+            "has_comment": true,
+            "comment_length": 51,
+            "has_example": false,
+            "quality_score": 0.5
+          }
+        }
+      ],
+      "tag_usage": {},
+      "complexity": {
+        "cyclomatic": 10,
+        "cognitive": 0,
+        "nesting_depth": 0,
+        "overall": 10
+      },
+      "documentation": {
+        "has_comment": true,
+        "comment_length": 66,
+        "has_example": false,
+        "quality_score": 0.5
+      }
+    },
+    {
+      "name": "FriendACL",
+      "package": "toxpt",
+      "file": "auth.go",
+      "line": 15,
+      "is_exported": true,
+      "total_fields": 2,
+      "fields_by_type": {
+        "slice": 1,
+        "struct": 1
+      },
+      "embedded_types": null,
+      "methods": [
+        {
+          "name": "IsAuthorized",
+          "is_exported": true,
+          "is_pointer_receiver": true,
+          "signature": {
+            "parameter_count": 1,
+            "return_count": 1,
+            "has_variadic": false,
+            "returns_error": false,
+            "interface_parameters": 0,
+            "generic_parameters": null,
+            "signature_complexity": 0.8
+          },
+          "lines": {
+            "total": 8,
+            "code": 5,
+            "comments": 1,
+            "blank": 2
+          },
+          "complexity": {
+            "cyclomatic": 2,
+            "cognitive": 0,
+            "nesting_depth": 1,
+            "overall": 2.5
+          },
+          "documentation": {
+            "has_comment": true,
+            "comment_length": 72,
+            "has_example": false,
+            "quality_score": 0.5
+          }
+        }
+      ],
+      "tag_usage": {},
+      "complexity": {
+        "cyclomatic": 4,
+        "cognitive": 0,
+        "nesting_depth": 0,
+        "overall": 4
+      },
+      "documentation": {
+        "has_comment": true,
+        "comment_length": 64,
+        "has_example": false,
+        "quality_score": 0.5
+      }
+    },
+    {
+      "name": "inboundRequest",
+      "package": "toxpt",
+      "file": "listener.go",
+      "line": 11,
+      "is_exported": false,
+      "total_fields": 2,
+      "fields_by_type": {
+        "slice": 1,
+        "struct": 1
+      },
+      "embedded_types": null,
+      "methods": null,
+      "tag_usage": {},
+      "complexity": {
+        "cyclomatic": 4,
+        "cognitive": 0,
+        "nesting_depth": 0,
+        "overall": 4
+      },
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    },
+    {
+      "name": "toxListener",
+      "package": "toxpt",
+      "file": "listener.go",
+      "line": 16,
+      "is_exported": false,
+      "total_fields": 6,
+      "fields_by_type": {
+        "channel": 2,
+        "pointer": 2,
+        "struct": 2
+      },
+      "embedded_types": null,
+      "methods": [
+        {
+          "name": "Accept",
+          "is_exported": true,
+          "is_pointer_receiver": true,
+          "signature": {
+            "parameter_count": 0,
+            "return_count": 2,
+            "has_variadic": false,
+            "returns_error": true,
+            "interface_parameters": 0,
+            "generic_parameters": null,
+            "signature_complexity": 0.6
+          },
+          "lines": {
+            "total": 21,
+            "code": 14,
+            "comments": 4,
+            "blank": 3
+          },
+          "complexity": {
+            "cyclomatic": 5,
+            "cognitive": 0,
+            "nesting_depth": 4,
+            "overall": 7
+          },
+          "documentation": {
+            "has_comment": false,
+            "comment_length": 0,
+            "has_example": false,
+            "quality_score": 0
+          }
+        },
+        {
+          "name": "Close",
+          "is_exported": true,
+          "is_pointer_receiver": true,
+          "signature": {
+            "parameter_count": 0,
+            "return_count": 1,
+            "has_variadic": false,
+            "returns_error": true,
+            "interface_parameters": 0,
+            "generic_parameters": null,
+            "signature_complexity": 0.3
+          },
+          "lines": {
+            "total": 4,
+            "code": 2,
+            "comments": 0,
+            "blank": 2
+          },
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "nesting_depth": 0,
+            "overall": 1
+          },
+          "documentation": {
+            "has_comment": false,
+            "comment_length": 0,
+            "has_example": false,
+            "quality_score": 0
+          }
+        },
+        {
+          "name": "Addr",
+          "is_exported": true,
+          "is_pointer_receiver": true,
+          "signature": {
+            "parameter_count": 0,
+            "return_count": 1,
+            "has_variadic": false,
+            "returns_error": false,
+            "interface_parameters": 0,
+            "generic_parameters": null,
+            "signature_complexity": 0.3
+          },
+          "lines": {
+            "total": 1,
+            "code": 0,
+            "comments": 0,
+            "blank": 1
+          },
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "nesting_depth": 0,
+            "overall": 1
+          },
+          "documentation": {
+            "has_comment": false,
+            "comment_length": 0,
+            "has_example": false,
+            "quality_score": 0
+          }
+        }
+      ],
+      "tag_usage": {},
+      "complexity": {
+        "cyclomatic": 14,
+        "cognitive": 0,
+        "nesting_depth": 0,
+        "overall": 14
+      },
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    },
+    {
+      "name": "ToxTransport",
+      "package": "toxpt",
+      "file": "transport.go",
+      "line": 17,
+      "is_exported": true,
+      "total_fields": 6,
+      "fields_by_type": {
+        "pointer": 3,
+        "struct": 3
+      },
+      "embedded_types": null,
+      "methods": [
+        {
+          "name": "Name",
+          "is_exported": true,
+          "is_pointer_receiver": true,
+          "signature": {
+            "parameter_count": 0,
+            "return_count": 1,
+            "has_variadic": false,
+            "returns_error": false,
+            "interface_parameters": 0,
+            "generic_parameters": null,
+            "signature_complexity": 0.3
+          },
+          "lines": {
+            "total": 0,
+            "code": 0,
+            "comments": 0,
+            "blank": 0
+          },
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "nesting_depth": 0,
+            "overall": 1
+          },
+          "documentation": {
+            "has_comment": false,
+            "comment_length": 0,
+            "has_example": false,
+            "quality_score": 0
+          }
+        },
+        {
+          "name": "Methods",
+          "is_exported": true,
+          "is_pointer_receiver": true,
+          "signature": {
+            "parameter_count": 0,
+            "return_count": 1,
+            "has_variadic": false,
+            "returns_error": false,
+            "interface_parameters": 0,
+            "generic_parameters": null,
+            "signature_complexity": 0.3
+          },
+          "lines": {
+            "total": 0,
+            "code": 0,
+            "comments": 0,
+            "blank": 0
+          },
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "nesting_depth": 0,
+            "overall": 1
+          },
+          "documentation": {
+            "has_comment": false,
+            "comment_length": 0,
+            "has_example": false,
+            "quality_score": 0
+          }
+        },
+        {
+          "name": "IsRunning",
+          "is_exported": true,
+          "is_pointer_receiver": true,
+          "signature": {
+            "parameter_count": 0,
+            "return_count": 1,
+            "has_variadic": false,
+            "returns_error": false,
+            "interface_parameters": 0,
+            "generic_parameters": null,
+            "signature_complexity": 0.3
+          },
+          "lines": {
+            "total": 0,
+            "code": 0,
+            "comments": 0,
+            "blank": 0
+          },
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "nesting_depth": 0,
+            "overall": 1
+          },
+          "documentation": {
+            "has_comment": false,
+            "comment_length": 0,
+            "has_example": false,
+            "quality_score": 0
+          }
+        },
+        {
+          "name": "Start",
+          "is_exported": true,
+          "is_pointer_receiver": true,
+          "signature": {
+            "parameter_count": 1,
+            "return_count": 1,
+            "has_variadic": false,
+            "returns_error": true,
+            "interface_parameters": 0,
+            "generic_parameters": null,
+            "signature_complexity": 0.8
+          },
+          "lines": {
+            "total": 18,
+            "code": 12,
+            "comments": 3,
+            "blank": 3
+          },
+          "complexity": {
+            "cyclomatic": 4,
+            "cognitive": 0,
+            "nesting_depth": 3,
+            "overall": 5.5
+          },
+          "documentation": {
+            "has_comment": true,
+            "comment_length": 80,
+            "has_example": false,
+            "quality_score": 0.5
+          }
+        },
+        {
+          "name": "Dial",
+          "is_exported": true,
+          "is_pointer_receiver": true,
+          "signature": {
+            "parameter_count": 2,
+            "return_count": 2,
+            "has_variadic": false,
+            "returns_error": true,
+            "interface_parameters": 0,
+            "generic_parameters": null,
+            "signature_complexity": 1.6
+          },
+          "lines": {
+            "total": 4,
+            "code": 2,
+            "comments": 0,
+            "blank": 2
+          },
+          "complexity": {
+            "cyclomatic": 2,
+            "cognitive": 0,
+            "nesting_depth": 1,
+            "overall": 2.5
+          },
+          "documentation": {
+            "has_comment": false,
+            "comment_length": 0,
+            "has_example": false,
+            "quality_score": 0
+          }
+        },
+        {
+          "name": "Listen",
+          "is_exported": true,
+          "is_pointer_receiver": true,
+          "signature": {
+            "parameter_count": 2,
+            "return_count": 2,
+            "has_variadic": false,
+            "returns_error": true,
+            "interface_parameters": 0,
+            "generic_parameters": null,
+            "signature_complexity": 1.6
+          },
+          "lines": {
+            "total": 9,
+            "code": 6,
+            "comments": 1,
+            "blank": 2
+          },
+          "complexity": {
+            "cyclomatic": 2,
+            "cognitive": 0,
+            "nesting_depth": 1,
+            "overall": 2.5
+          },
+          "documentation": {
+            "has_comment": false,
+            "comment_length": 0,
+            "has_example": false,
+            "quality_score": 0
+          }
+        },
+        {
+          "name": "Close",
+          "is_exported": true,
+          "is_pointer_receiver": true,
+          "signature": {
+            "parameter_count": 0,
+            "return_count": 1,
+            "has_variadic": false,
+            "returns_error": true,
+            "interface_parameters": 0,
+            "generic_parameters": null,
+            "signature_complexity": 0.3
+          },
+          "lines": {
+            "total": 9,
+            "code": 6,
+            "comments": 1,
+            "blank": 2
+          },
+          "complexity": {
+            "cyclomatic": 2,
+            "cognitive": 0,
+            "nesting_depth": 1,
+            "overall": 2.5
+          },
+          "documentation": {
+            "has_comment": false,
+            "comment_length": 0,
+            "has_example": false,
+            "quality_score": 0
+          }
+        }
+      ],
+      "tag_usage": {},
+      "complexity": {
+        "cyclomatic": 12,
+        "cognitive": 0,
+        "nesting_depth": 0,
+        "overall": 12
+      },
+      "documentation": {
+        "has_comment": true,
+        "comment_length": 72,
+        "has_example": false,
+        "quality_score": 0.5
+      }
+    },
+    {
+      "name": "framedConn",
+      "package": "toxpt",
+      "file": "framing.go",
+      "line": 70,
+      "is_exported": false,
+      "total_fields": 3,
+      "fields_by_type": {
+        "embedded": 1,
+        "slice": 1,
+        "struct": 1
+      },
+      "embedded_types": [
+        {
+          "name": "Conn",
+          "package": "net",
+          "is_pointer": false,
+          "is_exported": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "Read",
+          "is_exported": true,
+          "is_pointer_receiver": true,
+          "signature": {
+            "parameter_count": 1,
+            "return_count": 2,
+            "has_variadic": false,
+            "returns_error": true,
+            "interface_parameters": 0,
+            "generic_parameters": null,
+            "signature_complexity": 1.1
+          },
+          "lines": {
+            "total": 14,
+            "code": 9,
+            "comments": 2,
+            "blank": 3
+          },
+          "complexity": {
+            "cyclomatic": 3,
+            "cognitive": 0,
+            "nesting_depth": 2,
+            "overall": 4
+          },
+          "documentation": {
+            "has_comment": false,
+            "comment_length": 0,
+            "has_example": false,
+            "quality_score": 0
+          }
+        },
+        {
+          "name": "Write",
+          "is_exported": true,
+          "is_pointer_receiver": true,
+          "signature": {
+            "parameter_count": 1,
+            "return_count": 2,
+            "has_variadic": false,
+            "returns_error": true,
+            "interface_parameters": 0,
+            "generic_parameters": null,
+            "signature_complexity": 1.1
+          },
+          "lines": {
+            "total": 4,
+            "code": 2,
+            "comments": 0,
+            "blank": 2
+          },
+          "complexity": {
+            "cyclomatic": 2,
+            "cognitive": 0,
+            "nesting_depth": 1,
+            "overall": 2.5
+          },
+          "documentation": {
+            "has_comment": false,
+            "comment_length": 0,
+            "has_example": false,
+            "quality_score": 0
+          }
+        }
+      ],
+      "tag_usage": {},
+      "complexity": {
+        "cyclomatic": 8,
+        "cognitive": 0,
+        "nesting_depth": 1,
+        "overall": 8.5
+      },
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    },
+    {
+      "name": "EmbeddableBridge",
+      "package": "toxpt",
+      "file": "bridge.go",
+      "line": 15,
+      "is_exported": true,
+      "total_fields": 8,
+      "fields_by_type": {
+        "pointer": 1,
+        "struct": 7
+      },
+      "embedded_types": null,
+      "methods": [
+        {
+          "name": "Start",
+          "is_exported": true,
+          "is_pointer_receiver": true,
+          "signature": {
+            "parameter_count": 1,
+            "return_count": 1,
+            "has_variadic": false,
+            "returns_error": true,
+            "interface_parameters": 0,
+            "generic_parameters": null,
+            "signature_complexity": 0.8
+          },
+          "lines": {
+            "total": 18,
+            "code": 12,
+            "comments": 3,
+            "blank": 3
+          },
+          "complexity": {
+            "cyclomatic": 3,
+            "cognitive": 0,
+            "nesting_depth": 2,
+            "overall": 4
+          },
+          "documentation": {
+            "has_comment": true,
+            "comment_length": 38,
+            "has_example": false,
+            "quality_score": 0.3
+          }
+        },
+        {
+          "name": "acceptLoop",
+          "is_exported": false,
+          "is_pointer_receiver": true,
+          "signature": {
+            "parameter_count": 1,
+            "return_count": 0,
+            "has_variadic": false,
+            "returns_error": false,
+            "interface_parameters": 0,
+            "generic_parameters": null,
+            "signature_complexity": 0.5
+          },
+          "lines": {
+            "total": 13,
+            "code": 9,
+            "comments": 2,
+            "blank": 2
+          },
+          "complexity": {
+            "cyclomatic": 4,
+            "cognitive": 0,
+            "nesting_depth": 3,
+            "overall": 5.5
+          },
+          "documentation": {
+            "has_comment": false,
+            "comment_length": 0,
+            "has_example": false,
+            "quality_score": 0
+          }
+        },
+        {
+          "name": "handleConn",
+          "is_exported": false,
+          "is_pointer_receiver": true,
+          "signature": {
+            "parameter_count": 2,
+            "return_count": 0,
+            "has_variadic": false,
+            "returns_error": false,
+            "interface_parameters": 0,
+            "generic_parameters": null,
+            "signature_complexity": 1
+          },
+          "lines": {
+            "total": 6,
+            "code": 4,
+            "comments": 1,
+            "blank": 1
+          },
+          "complexity": {
+            "cyclomatic": 1,
+            "cognitive": 0,
+            "nesting_depth": 0,
+            "overall": 1
+          },
+          "documentation": {
+            "has_comment": false,
+            "comment_length": 0,
+            "has_example": false,
+            "quality_score": 0
+          }
+        },
+        {
+          "name": "Stop",
+          "is_exported": true,
+          "is_pointer_receiver": true,
+          "signature": {
+            "parameter_count": 0,
+            "return_count": 1,
+            "has_variadic": false,
+            "returns_error": true,
+            "interface_parameters": 0,
+            "generic_parameters": null,
+            "signature_complexity": 0.3
+          },
+          "lines": {
+            "total": 9,
+            "code": 6,
+            "comments": 1,
+            "blank": 2
+          },
+          "complexity": {
+            "cyclomatic": 3,
+            "cognitive": 0,
+            "nesting_depth": 2,
+            "overall": 4
+          },
+          "documentation": {
+            "has_comment": true,
+            "comment_length": 70,
+            "has_example": false,
+            "quality_score": 0.5
+          }
+        }
+      ],
+      "tag_usage": {},
+      "complexity": {
+        "cyclomatic": 16,
+        "cognitive": 0,
+        "nesting_depth": 0,
+        "overall": 16
+      },
+      "documentation": {
+        "has_comment": true,
+        "comment_length": 56,
+        "has_example": false,
+        "quality_score": 0.5
+      }
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "friendSource",
+      "package": "toxpt",
+      "file": "auth.go",
+      "line": 10,
+      "is_exported": false,
+      "method_count": 1,
+      "methods": [
+        {
+          "name": "GetFriends",
+          "signature": {
+            "parameter_count": 0,
+            "return_count": 1,
+            "has_variadic": false,
+            "returns_error": false,
+            "interface_parameters": 0,
+            "generic_parameters": null,
+            "signature_complexity": 0.6
+          }
+        }
+      ],
+      "embedded_interfaces": [],
+      "implementations": null,
+      "implementation_count": 0,
+      "implementation_ratio": 0,
+      "embedding_depth": 0,
+      "complexity_score": 0.8600000000000001,
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    }
+  ],
+  "packages": [
+    {
+      "name": "toxpt",
+      "path": "toxpt",
+      "files": [
+        "/tmp/workspace/opd-ai/toxpt/dial.go",
+        "/tmp/workspace/opd-ai/toxpt/config.go",
+        "/tmp/workspace/opd-ai/toxpt/auth.go",
+        "/tmp/workspace/opd-ai/toxpt/errors.go",
+        "/tmp/workspace/opd-ai/toxpt/listener.go",
+        "/tmp/workspace/opd-ai/toxpt/transport.go",
+        "/tmp/workspace/opd-ai/toxpt/framing.go",
+        "/tmp/workspace/opd-ai/toxpt/bridge.go"
+      ],
+      "lines": {
+        "total": 614,
+        "code": 614,
+        "comments": 0,
+        "blank": 0
+      },
+      "functions": 35,
+      "structs": 8,
+      "interfaces": 0,
+      "dependencies": [
+        "github.com/opd-ai/go-tor/pkg/errors",
+        "github.com/opd-ai/go-tor/pkg/pool",
+        "github.com/opd-ai/go-tor/pkg/pt",
+        "github.com/opd-ai/toxcore",
+        "go.opentelemetry.io/otel",
+        "go.opentelemetry.io/otel/metric",
+        "go.opentelemetry.io/otel/trace"
+      ],
+      "dependents": null,
+      "cohesion_score": 1.075,
+      "coupling_score": 3.5,
+      "documentation": {
+        "has_comment": false,
+        "comment_length": 0,
+        "has_example": false,
+        "quality_score": 0
+      }
+    }
+  ],
+  "circular_dependencies": [],
+  "patterns": {
+    "design_patterns": {
+      "singleton": [],
+      "factory": [],
+      "builder": [],
+      "observer": [],
+      "strategy": []
+    },
+    "concurrency_patterns": {
+      "worker_pools": [],
+      "pipelines": [],
+      "fan_out": [],
+      "fan_in": [],
+      "semaphores": [],
+      "goroutines": {
+        "total_count": 2,
+        "anonymous_count": 0,
+        "named_count": 2,
+        "potential_leaks": [],
+        "instances": [
+          {
+            "file": "toxpt",
+            "line": 65,
+            "function": "b.acceptLoop",
+            "is_anonymous": false,
+            "has_defer": false,
+            "context": "b.acceptLoop"
+          },
+          {
+            "file": "toxpt",
+            "line": 81,
+            "function": "b.handleConn",
+            "is_anonymous": false,
+            "has_defer": false,
+            "context": "b.handleConn"
+          }
+        ]
+      },
+      "channels": {
+        "total_count": 6,
+        "buffered_count": 1,
+        "unbuffered_count": 5,
+        "directional_count": 0,
+        "instances": [
+          {
+            "file": "toxpt",
+            "line": 20,
+            "function": "unknown",
+            "type": "inboundRequest",
+            "is_buffered": false,
+            "buffer_size": 0,
+            "is_directional": false,
+            "direction": "bidirectional"
+          },
+          {
+            "file": "toxpt",
+            "line": 21,
+            "function": "unknown",
+            "type": "unknown",
+            "is_buffered": false,
+            "buffer_size": 0,
+            "is_directional": false,
+            "direction": "bidirectional"
+          },
+          {
+            "file": "toxpt",
+            "line": 30,
+            "function": "unknown",
+            "type": "inboundRequest",
+            "is_buffered": true,
+            "buffer_size": 16,
+            "is_directional": false,
+            "direction": "bidirectional"
+          },
+          {
+            "file": "toxpt",
+            "line": 30,
+            "function": "unknown",
+            "type": "inboundRequest",
+            "is_buffered": false,
+            "buffer_size": 0,
+            "is_directional": false,
+            "direction": "bidirectional"
+          },
+          {
+            "file": "toxpt",
+            "line": 31,
+            "function": "unknown",
+            "type": "unknown",
+            "is_buffered": false,
+            "buffer_size": 0,
+            "is_directional": false,
+            "direction": "bidirectional"
+          },
+          {
+            "file": "toxpt",
+            "line": 31,
+            "function": "unknown",
+            "type": "unknown",
+            "is_buffered": false,
+            "buffer_size": 0,
+            "is_directional": false,
+            "direction": "bidirectional"
+          }
+        ]
+      },
+      "sync_primitives": {
+        "mutexes": [],
+        "rw_mutexes": [],
+        "wait_groups": [],
+        "once": [],
+        "cond": [],
+        "atomic": []
+      }
+    },
+    "anti_patterns": {
+      "god_objects": [],
+      "long_methods": [],
+      "deep_nesting": [],
+      "magic_numbers": [],
+      "performance_antipatterns": [
+        {
+          "type": "memory_allocation",
+          "description": "append() in loop without pre-allocation",
+          "severity": "warning",
+          "file": "/tmp/workspace/opd-ai/toxpt/auth.go",
+          "line": 45,
+          "suggestion": "Pre-allocate slice with make() for known capacity"
+        },
+        {
+          "type": "unused_receiver",
+          "description": "Method receiver is never referenced in method body",
+          "severity": "info",
+          "file": "/tmp/workspace/opd-ai/toxpt/transport.go",
+          "line": 55,
+          "suggestion": "Use _ as receiver name or convert to plain function if receiver is not needed"
+        },
+        {
+          "type": "unused_receiver",
+          "description": "Method receiver is never referenced in method body",
+          "severity": "info",
+          "file": "/tmp/workspace/opd-ai/toxpt/transport.go",
+          "line": 57,
+          "suggestion": "Use _ as receiver name or convert to plain function if receiver is not needed"
+        },
+        {
+          "type": "bare_error_return",
+          "description": "Error returned without context wrapping",
+          "severity": "violation",
+          "file": "/tmp/workspace/opd-ai/toxpt/framing.go",
+          "line": 23,
+          "suggestion": "Wrap error with fmt.Errorf(\"context: %w\", err) to preserve error chain"
+        },
+        {
+          "type": "bare_error_return",
+          "description": "Error returned without context wrapping",
+          "severity": "violation",
+          "file": "/tmp/workspace/opd-ai/toxpt/framing.go",
+          "line": 47,
+          "suggestion": "Wrap error with fmt.Errorf(\"context: %w\", err) to preserve error chain"
+        },
+        {
+          "type": "bare_error_return",
+          "description": "Error returned without context wrapping",
+          "severity": "violation",
+          "file": "/tmp/workspace/opd-ai/toxpt/framing.go",
+          "line": 86,
+          "suggestion": "Wrap error with fmt.Errorf(\"context: %w\", err) to preserve error chain"
+        },
+        {
+          "type": "bare_error_return",
+          "description": "Error returned without context wrapping",
+          "severity": "violation",
+          "file": "/tmp/workspace/opd-ai/toxpt/framing.go",
+          "line": 98,
+          "suggestion": "Wrap error with fmt.Errorf(\"context: %w\", err) to preserve error chain"
+        },
+        {
+          "type": "bare_error_return",
+          "description": "Error returned without context wrapping",
+          "severity": "violation",
+          "file": "/tmp/workspace/opd-ai/toxpt/bridge.go",
+          "line": 31,
+          "suggestion": "Wrap error with fmt.Errorf(\"context: %w\", err) to preserve error chain"
+        }
+      ]
+    }
+  },
+  "complexity": {
+    "average_function_complexity": 0,
+    "average_struct_complexity": 0,
+    "highest_complexity": null,
+    "complexity_distribution": null
+  },
+  "documentation": {
+    "coverage": {
+      "packages": 0,
+      "functions": 100,
+      "types": 100,
+      "methods": 18.75,
+      "overall": 48
+    },
+    "quality": {
+      "average_length": 73,
+      "code_examples": 0,
+      "inline_comments": 23,
+      "block_comments": 0,
+      "quality_score": 39.2
+    },
+    "todo_comments": [],
+    "fixme_comments": [],
+    "hack_comments": [],
+    "bug_comments": [],
+    "xxx_comments": [],
+    "deprecated_comments": [],
+    "note_comments": [],
+    "stale_annotations": 0,
+    "annotations_by_category": {}
+  },
+  "generics": {
+    "type_parameters": {
+      "count": 0,
+      "constraints": null,
+      "complexity": null
+    },
+    "instantiations": {
+      "functions": null,
+      "types": null,
+      "methods": null
+    },
+    "constraint_usage": null,
+    "complexity_score": 0
+  },
+  "duplication": {
+    "clone_pairs": 0,
+    "duplicated_lines": 0,
+    "duplication_ratio": 0,
+    "largest_clone_size": 0,
+    "clones": null
+  },
+  "naming": {
+    "file_name_violations": 0,
+    "identifier_violations": 0,
+    "package_name_violations": 0,
+    "overall_naming_score": 0,
+    "file_name_issues": null,
+    "identifier_issues": null,
+    "package_name_issues": null
+  },
+  "placement": {
+    "misplaced_functions": 0,
+    "misplaced_methods": 0,
+    "low_cohesion_files": 0,
+    "avg_file_cohesion": 0,
+    "function_issues": null,
+    "method_issues": null,
+    "cohesion_issues": null
+  },
+  "organization": {
+    "oversized_files": null,
+    "oversized_packages": null,
+    "deep_directories": null,
+    "high_fan_in_packages": null,
+    "high_fan_out_packages": null,
+    "avg_package_instability": 0
+  },
+  "burden": {
+    "magic_numbers": null,
+    "dead_code": {
+      "unreferenced_functions": null,
+      "unreachable_code": null,
+      "total_dead_lines": 0,
+      "dead_code_percent": 0
+    },
+    "complex_signatures": null,
+    "deeply_nested_functions": null,
+    "feature_envy_methods": null
+  },
+  "scores": {
+    "file_scores": null,
+    "package_scores": null
+  },
+  "test_coverage": {
+    "function_coverage_rate": 0,
+    "complexity_coverage_rate": 0,
+    "high_risk_functions": null,
+    "coverage_gaps": null
+  },
+  "test_quality": {
+    "total_tests": 0,
+    "avg_assertions_per_test": 0,
+    "test_files": null
+  }
+}
