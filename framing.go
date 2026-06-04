@@ -69,8 +69,11 @@ func readFramed(ctx context.Context, conn net.Conn) ([]byte, error) {
 
 type framedConn struct {
 	net.Conn
-	mu      sync.Mutex
-	readBuf []byte
+	mu            sync.Mutex
+	deadlineMu    sync.RWMutex
+	readBuf       []byte
+	readDeadline  time.Time
+	writeDeadline time.Time
 }
 
 func newFramedConn(conn net.Conn) net.Conn {
@@ -82,7 +85,9 @@ func (c *framedConn) Read(p []byte) (int, error) {
 	defer c.mu.Unlock()
 
 	if len(c.readBuf) == 0 {
-		payload, err := readFramed(context.Background(), c.Conn)
+		ctx, cancel := c.readContext()
+		payload, err := readFramed(ctx, c.Conn)
+		cancel()
 		if err != nil {
 			return 0, err
 		}
@@ -95,10 +100,56 @@ func (c *framedConn) Read(p []byte) (int, error) {
 }
 
 func (c *framedConn) Write(p []byte) (int, error) {
-	if err := writeFramed(context.Background(), c.Conn, p); err != nil {
+	ctx, cancel := c.writeContext()
+	err := writeFramed(ctx, c.Conn, p)
+	cancel()
+	if err != nil {
 		return 0, err
 	}
 	return len(p), nil
+}
+
+func (c *framedConn) SetDeadline(t time.Time) error {
+	c.deadlineMu.Lock()
+	c.readDeadline = t
+	c.writeDeadline = t
+	c.deadlineMu.Unlock()
+	return c.Conn.SetDeadline(t)
+}
+
+func (c *framedConn) SetReadDeadline(t time.Time) error {
+	c.deadlineMu.Lock()
+	c.readDeadline = t
+	c.deadlineMu.Unlock()
+	return c.Conn.SetReadDeadline(t)
+}
+
+func (c *framedConn) SetWriteDeadline(t time.Time) error {
+	c.deadlineMu.Lock()
+	c.writeDeadline = t
+	c.deadlineMu.Unlock()
+	return c.Conn.SetWriteDeadline(t)
+}
+
+func (c *framedConn) readContext() (context.Context, context.CancelFunc) {
+	c.deadlineMu.RLock()
+	deadline := c.readDeadline
+	c.deadlineMu.RUnlock()
+	return contextFromDeadline(deadline)
+}
+
+func (c *framedConn) writeContext() (context.Context, context.CancelFunc) {
+	c.deadlineMu.RLock()
+	deadline := c.writeDeadline
+	c.deadlineMu.RUnlock()
+	return contextFromDeadline(deadline)
+}
+
+func contextFromDeadline(deadline time.Time) (context.Context, context.CancelFunc) {
+	if deadline.IsZero() {
+		return context.Background(), func() {}
+	}
+	return context.WithDeadline(context.Background(), deadline)
 }
 
 func applyReadDeadlineFromContext(conn net.Conn, ctx context.Context) error {

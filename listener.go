@@ -19,17 +19,25 @@ type toxListener struct {
 	logger    *slog.Logger
 	inbound   chan inboundRequest
 	closed    chan struct{}
+	closeErr  error
 	closeOnce sync.Once
 }
 
-func newToxListener(bindAddr string, acl *FriendACL, logger *slog.Logger) *toxListener {
+func newToxListener(bindAddr string, acl *FriendACL, logger *slog.Logger, bufferSize int) *toxListener {
 	return &toxListener{
 		addr:    &net.TCPAddr{IP: net.IPv4zero, Port: 0},
 		acl:     acl,
 		logger:  logger,
-		inbound: make(chan inboundRequest, 16),
+		inbound: make(chan inboundRequest, normalizedInboundBufferSize(bufferSize)),
 		closed:  make(chan struct{}),
 	}
+}
+
+func normalizedInboundBufferSize(bufferSize int) int {
+	if bufferSize <= 0 {
+		return DefaultConfig().InboundBufferSize
+	}
+	return bufferSize
 }
 
 func (l *toxListener) Accept() (net.Conn, error) {
@@ -60,7 +68,7 @@ func (l *toxListener) Close() error {
 	l.closeOnce.Do(func() {
 		close(l.closed)
 	})
-	return nil
+	return l.closeErr
 }
 
 func (l *toxListener) Addr() net.Addr {

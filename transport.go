@@ -27,11 +27,9 @@ type ToxTransport struct {
 // NewTransport creates a new Tox pluggable transport instance.
 // The provided config must include an existing ToxClient instance.
 func NewTransport(cfg Config) (*ToxTransport, error) {
+	cfg = withDefaultConfigValues(cfg)
 	if cfg.Logger == nil {
 		cfg.Logger = DefaultConfig().Logger
-	}
-	if cfg.BridgeORPort == 0 {
-		cfg.BridgeORPort = DefaultConfig().BridgeORPort
 	}
 	if err := cfg.Validate(); err != nil {
 		return nil, wrapConfig("invalid transport configuration", err)
@@ -50,6 +48,16 @@ func NewTransport(cfg Config) (*ToxTransport, error) {
 		acl: acl,
 		tox: cfg.ToxClient,
 	}, nil
+}
+
+func withDefaultConfigValues(cfg Config) Config {
+	if cfg.BridgeORPort == 0 {
+		cfg.BridgeORPort = DefaultConfig().BridgeORPort
+	}
+	if cfg.InboundBufferSize == 0 {
+		cfg.InboundBufferSize = DefaultConfig().InboundBufferSize
+	}
+	return cfg
 }
 
 func (t *ToxTransport) Name() string { return "tox" }
@@ -92,7 +100,7 @@ func (t *ToxTransport) Listen(_ context.Context, bindAddr string) (net.Listener,
 		return nil, wrapNetwork("transport not started", ErrNotRunning)
 	}
 
-	l := newToxListener(bindAddr, t.acl, t.cfg.Logger)
+	l := newToxListener(bindAddr, t.acl, t.cfg.Logger, t.cfg.InboundBufferSize)
 	t.mu.Lock()
 	t.listener = l
 	t.mu.Unlock()
@@ -102,11 +110,12 @@ func (t *ToxTransport) Listen(_ context.Context, bindAddr string) (net.Listener,
 func (t *ToxTransport) Close() error {
 	t.mu.Lock()
 	defer t.mu.Unlock()
+	var err error
 	if t.listener != nil {
-		_ = t.listener.Close()
+		err = joinErr("close listener", t.listener.Close())
 		t.listener = nil
 	}
 	// Don't close tox - it's managed externally
 	t.running.Store(false)
-	return nil
+	return err
 }

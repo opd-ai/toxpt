@@ -2,6 +2,7 @@ package toxpt
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"net"
@@ -59,11 +60,12 @@ func (b *EmbeddableBridge) Start(ctx context.Context) error {
 	}
 
 	b.listener = listener
-	acceptCtx, cancel := context.WithCancel(context.Background())
+	acceptCtx, cancel := context.WithCancel(ctx)
 	b.cancel = cancel
 
-	b.wg.Add(1)
+	b.wg.Add(2)
 	go b.acceptLoop(acceptCtx)
+	go b.closeListenerOnContextDone(acceptCtx, listener)
 	return nil
 }
 
@@ -72,15 +74,32 @@ func (b *EmbeddableBridge) acceptLoop(ctx context.Context) {
 	for {
 		conn, err := b.listener.Accept()
 		if err != nil {
-			if ctx.Err() != nil {
+			if b.shouldStopAcceptLoop(ctx, err) {
 				return
 			}
+			b.logAcceptError(err)
 			continue
 		}
 		b.accepted.Add(ctx, 1)
 		b.wg.Add(1)
 		go b.handleConn(ctx, conn)
 	}
+}
+
+func (b *EmbeddableBridge) closeListenerOnContextDone(ctx context.Context, listener net.Listener) {
+	defer b.wg.Done()
+	<-ctx.Done()
+	if listener != nil {
+		_ = listener.Close()
+	}
+}
+
+func (b *EmbeddableBridge) shouldStopAcceptLoop(ctx context.Context, err error) bool {
+	return ctx.Err() != nil || errors.Is(err, net.ErrClosed)
+}
+
+func (b *EmbeddableBridge) logAcceptError(err error) {
+	b.cfg.Logger.Error("accept failed", "error", err)
 }
 
 func (b *EmbeddableBridge) handleConn(ctx context.Context, conn net.Conn) {
@@ -138,10 +157,21 @@ func (b *EmbeddableBridge) Stop() error {
 	if b.cancel != nil {
 		b.cancel()
 	}
-	if b.listener != nil {
-		_ = b.listener.Close()
+	errs := []error{
+		closeWithPrefix("close listener", b.listener),
+		closeWithPrefix("close transport", b.transport),
 	}
-	_ = b.transport.Close()
 	b.wg.Wait()
-	return nil
+	return errors.Join(errs...)
+}
+
+type closer interface {
+	Close() error
+}
+
+func closeWithPrefix(prefix string, c closer) error {
+	if c == nil {
+		return nil
+	}
+	return joinErr(prefix, c.Close())
 }
