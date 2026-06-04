@@ -1,6 +1,7 @@
 package toxpt
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"io"
@@ -10,6 +11,7 @@ import (
 	"time"
 
 	"github.com/opd-ai/toxcore"
+	"go.opentelemetry.io/otel"
 )
 
 func mustKey(b byte) [32]byte {
@@ -342,20 +344,78 @@ func TestBridgeStartStop(t *testing.T) {
 func TestBridgeHandleConn(t *testing.T) {
 	cfg := validConfig(t)
 	defer cfg.ToxClient.Kill()
-	bridge, err := NewEmbeddableBridge(cfg)
+	orListener, err := net.Listen("tcp", "127.0.0.1:0")
 	if err != nil {
-		t.Fatalf("NewEmbeddableBridge() error = %v", err)
+		t.Fatalf("failed to start fake OR listener: %v", err)
 	}
-	c1, c2 := net.Pipe()
+	defer orListener.Close()
+
+	cfg.BridgeORPort = uint16(orListener.Addr().(*net.TCPAddr).Port)
+	bridge := &EmbeddableBridge{
+		cfg:    cfg,
+		tracer: otel.Tracer("test"),
+	}
+
+	orAccepted := make(chan net.Conn, 1)
+	acceptErr := make(chan error, 1)
+	go func() {
+		conn, err := orListener.Accept()
+		if err != nil {
+			acceptErr <- err
+			return
+		}
+		orAccepted <- conn
+	}()
+
+	bridgeConn, clientConn := net.Pipe()
+	defer clientConn.Close()
 	done := make(chan struct{})
 	bridge.wg.Add(1)
 	go func() {
-		bridge.handleConn(context.Background(), c1)
+		bridge.handleConn(context.Background(), bridgeConn)
 		close(done)
 	}()
-	_, _ = c2.Write([]byte("x"))
-	_ = c2.Close()
-	<-done
+
+	var orConn net.Conn
+	select {
+	case err := <-acceptErr:
+		t.Fatalf("fake OR accept failed: %v", err)
+	case orConn = <-orAccepted:
+	}
+	defer orConn.Close()
+
+	clientToOR := []byte("client-to-or")
+	if _, err := clientConn.Write(clientToOR); err != nil {
+		t.Fatalf("client write failed: %v", err)
+	}
+	_ = orConn.SetReadDeadline(time.Now().Add(time.Second))
+	gotUpstream := make([]byte, len(clientToOR))
+	if _, err := io.ReadFull(orConn, gotUpstream); err != nil {
+		t.Fatalf("or read failed: %v", err)
+	}
+	if !bytes.Equal(gotUpstream, clientToOR) {
+		t.Fatalf("upstream relay mismatch: got %q want %q", gotUpstream, clientToOR)
+	}
+
+	orToClient := []byte("or-to-client")
+	if _, err := orConn.Write(orToClient); err != nil {
+		t.Fatalf("or write failed: %v", err)
+	}
+	_ = clientConn.SetReadDeadline(time.Now().Add(time.Second))
+	gotDownstream := make([]byte, len(orToClient))
+	if _, err := io.ReadFull(clientConn, gotDownstream); err != nil {
+		t.Fatalf("client read failed: %v", err)
+	}
+	if !bytes.Equal(gotDownstream, orToClient) {
+		t.Fatalf("downstream relay mismatch: got %q want %q", gotDownstream, orToClient)
+	}
+
+	_ = clientConn.Close()
+	select {
+	case <-done:
+	case <-time.After(time.Second):
+		t.Fatal("handleConn did not return after closure")
+	}
 }
 
 func TestWriteFramedTooLarge(t *testing.T) {

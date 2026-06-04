@@ -8,7 +8,6 @@ import (
 
 var (
 	ErrInvalidConfig = torerrors.New(torerrors.CategoryConfiguration, torerrors.SeverityHigh, "invalid toxpt configuration")
-	ErrUnauthorized  = torerrors.New(torerrors.CategoryProtocol, torerrors.SeverityHigh, "unauthorized tox peer")
 	ErrNotRunning    = torerrors.New(torerrors.CategoryNetwork, torerrors.SeverityMedium, "transport not running")
 )
 

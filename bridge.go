@@ -2,6 +2,7 @@ package toxpt
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"net"
 	"sync"
@@ -84,11 +85,52 @@ func (b *EmbeddableBridge) acceptLoop(ctx context.Context) {
 
 func (b *EmbeddableBridge) handleConn(ctx context.Context, conn net.Conn) {
 	defer b.wg.Done()
-	defer conn.Close()
 	_, span := b.tracer.Start(ctx, "toxpt.bridge.handle_conn")
 	defer span.End()
 
-	_, _ = io.Copy(io.Discard, conn)
+	orAddr := fmt.Sprintf("127.0.0.1:%d", b.cfg.BridgeORPort)
+	dialer := net.Dialer{}
+	orConn, err := dialer.DialContext(ctx, "tcp", orAddr)
+	if err != nil {
+		b.cfg.Logger.Error("failed to connect to tor or port", "error", err)
+		return
+	}
+	var wg sync.WaitGroup
+	wg.Add(2)
+	relayDone := make(chan struct{})
+	var closeOnce sync.Once
+	closeBoth := func() {
+		closeOnce.Do(func() {
+			_ = conn.Close()
+			_ = orConn.Close()
+		})
+	}
+	defer closeBoth()
+
+	go func() {
+		select {
+		case <-ctx.Done():
+			closeBoth()
+		case <-relayDone:
+		}
+	}()
+
+	// Client -> Tor
+	go func() {
+		defer wg.Done()
+		_, _ = io.Copy(orConn, conn)
+		closeBoth()
+	}()
+
+	// Tor -> Client
+	go func() {
+		defer wg.Done()
+		_, _ = io.Copy(conn, orConn)
+		closeBoth()
+	}()
+
+	wg.Wait()
+	close(relayDone)
 }
 
 // Stop gracefully stops the bridge and drains in-flight connections.
