@@ -19,19 +19,16 @@ type ToxTransport struct {
 	acl      *FriendACL
 	tox      *toxcore.Tox
 	listener *toxListener
-	newTox   func(*toxcore.Options) (*toxcore.Tox, error)
 
 	running atomic.Bool
 	mu      sync.RWMutex
 }
 
 // NewTransport creates a new Tox pluggable transport instance.
+// The provided config must include an existing ToxClient instance.
 func NewTransport(cfg Config) (*ToxTransport, error) {
 	if cfg.Logger == nil {
 		cfg.Logger = DefaultConfig().Logger
-	}
-	if cfg.ListenPort == 0 {
-		cfg.ListenPort = defaultListenPort
 	}
 	if cfg.BridgeORPort == 0 {
 		cfg.BridgeORPort = DefaultConfig().BridgeORPort
@@ -40,10 +37,18 @@ func NewTransport(cfg Config) (*ToxTransport, error) {
 		return nil, wrapConfig("invalid transport configuration", err)
 	}
 
+	// Use explicit ACL if provided, otherwise allow all friends from the client
+	var acl *FriendACL
+	if len(cfg.AllowedFriends) > 0 {
+		acl = NewFriendACL(cfg.AllowedFriends)
+	} else {
+		acl = NewFriendACLFromTox(cfg.ToxClient)
+	}
+
 	return &ToxTransport{
-		cfg:    cfg,
-		acl:    NewFriendACL(cfg.AllowedFriends),
-		newTox: toxcore.New,
+		cfg: cfg,
+		acl: acl,
+		tox: cfg.ToxClient,
 	}, nil
 }
 
@@ -53,34 +58,25 @@ func (t *ToxTransport) Methods() []string { return []string{"tox"} }
 
 func (t *ToxTransport) IsRunning() bool { return t.running.Load() }
 
-// Start initializes toxcore in the strongest available mode.
+// Start marks the transport as running. The ToxClient must already be started.
 func (t *ToxTransport) Start(_ context.Context) error {
 	if t.running.Load() {
 		return nil
 	}
 
-	options := toxcore.NewOptions()
-	// Security mode: toxcore defaults to secure-by-default Noise-IK negotiation.
-	// We additionally disable UDP and local discovery to force TCP-only transport,
-	// reducing direct UDP metadata exposure and avoiding UDP proxy bypass behavior.
-	options.UDPEnabled = false
-	options.LocalDiscovery = false
-	options.TCPPort = t.cfg.ListenPort
-	options.StartPort = t.cfg.ListenPort
-	options.EndPort = t.cfg.ListenPort
-	options.SavedataType = toxcore.SaveDataTypeSecretKey
-	options.SavedataData = append([]byte(nil), t.cfg.ToxSecretKey[:]...)
-	options.SavedataLength = uint32(len(options.SavedataData))
+	t.mu.Lock()
+	defer t.mu.Unlock()
 
-	toxInstance, err := t.newTox(options)
-	if err != nil {
-		return wrapNetwork("failed to initialize toxcore", err)
+	if t.tox == nil {
+		return wrapConfig("tox client is nil", ErrInvalidConfig)
 	}
 
-	t.mu.Lock()
-	t.tox = toxInstance
+	// Refresh ACL from current friend list if no explicit friends specified
+	if len(t.cfg.AllowedFriends) == 0 {
+		t.acl = NewFriendACLFromTox(t.tox)
+	}
+
 	t.running.Store(true)
-	t.mu.Unlock()
 	return nil
 }
 
@@ -110,7 +106,7 @@ func (t *ToxTransport) Close() error {
 		_ = t.listener.Close()
 		t.listener = nil
 	}
-	t.tox = nil
+	// Don't close tox - it's managed externally
 	t.running.Store(false)
 	return nil
 }
