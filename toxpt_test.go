@@ -210,6 +210,53 @@ func TestFramedConnRoundTrip(t *testing.T) {
 	}
 }
 
+func TestFramedConnReadDeadlineRespected(t *testing.T) {
+	_, c2 := net.Pipe()
+	defer c2.Close()
+
+	fc := newFramedConn(c2)
+	if err := fc.SetReadDeadline(time.Now().Add(50 * time.Millisecond)); err != nil {
+		t.Fatalf("SetReadDeadline() error = %v", err)
+	}
+
+	buf := make([]byte, 8)
+	start := time.Now()
+	_, err := fc.Read(buf)
+	if err == nil {
+		t.Fatal("expected read deadline error")
+	}
+	if time.Since(start) > time.Second {
+		t.Fatalf("read ignored deadline; duration=%v", time.Since(start))
+	}
+	var netErr net.Error
+	if !errors.As(err, &netErr) || !netErr.Timeout() {
+		t.Fatalf("expected timeout error, got %v", err)
+	}
+}
+
+func TestFramedConnWriteDeadlineRespected(t *testing.T) {
+	c1, _ := net.Pipe()
+	defer c1.Close()
+
+	fc := newFramedConn(c1)
+	if err := fc.SetWriteDeadline(time.Now().Add(50 * time.Millisecond)); err != nil {
+		t.Fatalf("SetWriteDeadline() error = %v", err)
+	}
+
+	start := time.Now()
+	_, err := fc.Write([]byte("tor-cell"))
+	if err == nil {
+		t.Fatal("expected write deadline error")
+	}
+	if time.Since(start) > time.Second {
+		t.Fatalf("write ignored deadline; duration=%v", time.Since(start))
+	}
+	var netErr net.Error
+	if !errors.As(err, &netErr) || !netErr.Timeout() {
+		t.Fatalf("expected timeout error, got %v", err)
+	}
+}
+
 func TestApplyDeadlineHelpers(t *testing.T) {
 	c1, c2 := net.Pipe()
 	defer c1.Close()

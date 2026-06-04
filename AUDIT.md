@@ -52,19 +52,19 @@
 
 ### HIGH
 
-- [ ] **HIGH-1: handleConn discards all data without forwarding** — `bridge.go:91` — **Logic** — The `handleConn` method reads from the connection using `io.Copy(io.Discard, conn)`, which discards all incoming data rather than forwarding it to a Tor relay or processing it in any meaningful way. This effectively makes the bridge non-functional as a pluggable transport since it silently drops all Tor cell data.
+- [x] **HIGH-1: handleConn discards all data without forwarding** — `bridge.go:91` — **Logic** — The current `handleConn` implementation relays traffic bidirectionally between the accepted Tox connection and the configured Tor OR port, so this finding is already resolved in code.
 
   **Code path**: `EmbeddableBridge.Start()` → `acceptLoop()` → `handleConn()` → `io.Copy(io.Discard, conn)` discards all data.
 
   **Remediation**: Implement actual Tor cell forwarding logic to connect accepted inbound connections to a Tor OR port. Validate with integration tests that verify data flows through the bridge.
 
-- [ ] **HIGH-2: framedConn.Read uses context.Background() ignoring caller context** — `framing.go:85` — **Logic/API** — The `framedConn.Read` method hardcodes `context.Background()` when calling `readFramed`, meaning it ignores any deadlines or cancellation from the caller. This can cause reads to block indefinitely even when the caller has cancelled.
+- [x] **HIGH-2: framedConn.Read uses context.Background() ignoring caller context** — `framing.go:85` — **Logic/API** — `framedConn` now preserves caller-configured read deadlines and reuses them when reading framed payloads, so framed reads no longer clear or ignore connection-level timeout control.
 
   **Code path**: Any caller using `conn.Read()` on a framedConn → `readFramed(context.Background(), c.Conn)` ignores context.
 
   **Remediation**: Store context in framedConn at construction time or use `SetReadDeadline` more aggressively. At minimum, document this limitation. Validate with a test that cancels a context and verifies read returns promptly.
 
-- [ ] **HIGH-3: framedConn.Write uses context.Background() ignoring caller context** — `framing.go:98` — **Logic/API** — Same issue as HIGH-2 but for writes. The `framedConn.Write` method hardcodes `context.Background()`, ignoring any deadlines.
+- [x] **HIGH-3: framedConn.Write uses context.Background() ignoring caller context** — `framing.go:98` — **Logic/API** — `framedConn` now preserves caller-configured write deadlines and reuses them when writing framed payloads, so framed writes honor connection-level timeout control.
 
   **Code path**: Any caller using `conn.Write()` on a framedConn → `writeFramed(context.Background(), c.Conn, p)` ignores context.
 
