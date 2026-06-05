@@ -23,7 +23,10 @@ type toxListener struct {
 	closeOnce sync.Once
 }
 
-func newToxListener(bindAddr string, acl *FriendACL, logger *slog.Logger, bufferSize int) *toxListener {
+func newToxListener(acl *FriendACL, logger *slog.Logger, bufferSize int) *toxListener {
+	if logger == nil {
+		logger = slog.Default()
+	}
 	return &toxListener{
 		addr:    &net.TCPAddr{IP: net.IPv4zero, Port: 0},
 		acl:     acl,
@@ -50,13 +53,11 @@ func (l *toxListener) Accept() (net.Conn, error) {
 				if req.conn != nil {
 					_ = req.conn.Close()
 				}
-				if l.logger != nil {
-					l.logger.LogAttrs(nil, slog.LevelWarn, "unauthorized tox connection",
-						slog.String("event", "unauthorized_connection"),
-						slog.String("tox_pubkey", hex.EncodeToString(req.remoteKey[:])),
-						slog.Time("timestamp", time.Now().UTC()),
-					)
-				}
+				l.logger.LogAttrs(nil, slog.LevelWarn, "unauthorized tox connection",
+					slog.String("event", "unauthorized_connection"),
+					slog.String("tox_pubkey", hex.EncodeToString(req.remoteKey[:])),
+					slog.Time("timestamp", time.Now().UTC()),
+				)
 				continue
 			}
 			return req.conn, nil

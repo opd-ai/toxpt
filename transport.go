@@ -60,10 +60,13 @@ func withDefaultConfigValues(cfg Config) Config {
 	return cfg
 }
 
+// Name returns the name of the transport protocol.
 func (t *ToxTransport) Name() string { return "tox" }
 
+// Methods returns the list of transport methods supported.
 func (t *ToxTransport) Methods() []string { return []string{"tox"} }
 
+// IsRunning reports whether the transport is currently running.
 func (t *ToxTransport) IsRunning() bool { return t.running.Load() }
 
 // Start marks the transport as running. The ToxClient must already be started.
@@ -88,25 +91,33 @@ func (t *ToxTransport) Start(_ context.Context) error {
 	return nil
 }
 
+// Dial establishes an outbound connection through the Tox transport.
+// Note: The address parameter is ignored; the ClientPublicKey from Config determines the dial target.
 func (t *ToxTransport) Dial(ctx context.Context, address string) (net.Conn, error) {
 	if !t.running.Load() {
 		return nil, wrapNetwork("transport not started", ErrNotRunning)
 	}
-	return t.dial(ctx, address)
+	// Note: address parameter is part of the pt.ClientTransport interface but is ignored
+	// since ClientPublicKey in config determines the dial target in Tox transport
+	_ = address
+	return t.dial(ctx)
 }
 
+// Listen creates a new listener for inbound connections through the Tox transport.
+// The bindAddr parameter is ignored; the listener always listens on all Tox friends.
 func (t *ToxTransport) Listen(_ context.Context, bindAddr string) (net.Listener, error) {
 	if !t.running.Load() {
 		return nil, wrapNetwork("transport not started", ErrNotRunning)
 	}
 
-	l := newToxListener(bindAddr, t.acl, t.cfg.Logger, t.cfg.InboundBufferSize)
+	l := newToxListener(t.acl, t.cfg.Logger, t.cfg.InboundBufferSize)
 	t.mu.Lock()
 	t.listener = l
 	t.mu.Unlock()
 	return l, nil
 }
 
+// Close closes the transport and releases associated resources.
 func (t *ToxTransport) Close() error {
 	t.mu.Lock()
 	defer t.mu.Unlock()

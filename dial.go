@@ -5,7 +5,10 @@ import (
 	"net"
 )
 
-func (t *ToxTransport) dial(ctx context.Context, _ string) (net.Conn, error) {
+// dial establishes a connection through the Tox transport.
+// Note: The ClientPublicKey in Config determines the dial target,
+// not the address parameter from the pt.ClientTransport interface.
+func (t *ToxTransport) dial(ctx context.Context) (net.Conn, error) {
 	t.mu.RLock()
 	listener := t.listener
 	clientKey := t.cfg.ClientPublicKey

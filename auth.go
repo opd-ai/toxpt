@@ -7,7 +7,8 @@ import (
 	"github.com/opd-ai/toxcore"
 )
 
-type friendSource interface {
+// FriendSource provides a dynamic source of Tox friends.
+type FriendSource interface {
 	GetFriends() map[uint32]*toxcore.Friend
 }
 
@@ -29,10 +30,11 @@ func NewFriendACLFromTox(t *toxcore.Tox) *FriendACL {
 	if t == nil {
 		return &FriendACL{}
 	}
-	return newFriendACLFromSource(t)
+	return NewFriendACLFromSource(t)
 }
 
-func newFriendACLFromSource(source friendSource) *FriendACL {
+// NewFriendACLFromSource creates an ACL from any FriendSource implementation.
+func NewFriendACLFromSource(source FriendSource) *FriendACL {
 	if source == nil {
 		return &FriendACL{}
 	}
