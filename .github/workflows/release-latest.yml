@@ -1,0 +1,46 @@
+name: Release Latest
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  release:
+    name: Create Latest Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Get commit info
+        id: commit
+        run: |
+          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "timestamp=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
+          echo "author=$(git log -1 --pretty=format:'%an')" >> $GITHUB_OUTPUT
+          echo "message=$(git log -1 --pretty=format:'%s')" >> $GITHUB_OUTPUT
+      
+      - name: Delete existing latest release
+        continue-on-error: true
+        run: |
+          gh release delete latest --yes || true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Create latest release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: latest
+          release_name: Latest Build
+          body: |
+            **Latest automated release from main branch**
+            
+            **Commit:** ${{ steps.commit.outputs.sha_short }}
+            **Author:** ${{ steps.commit.outputs.author }}
+            **Message:** ${{ steps.commit.outputs.message }}
+            **Timestamp:** ${{ steps.commit.outputs.timestamp }}
+          draft: false
+          prerelease: true
