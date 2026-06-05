@@ -184,7 +184,7 @@ func (l *scriptedListener) Close() error { return nil }
 func (l *scriptedListener) Addr() net.Addr { return &net.TCPAddr{} }
 
 func TestNewFriendACLFromSource(t *testing.T) {
-	nilACL := newFriendACLFromSource(nil)
+	nilACL := NewFriendACLFromSource(nil)
 	if nilACL == nil {
 		t.Fatal("expected acl from nil source")
 	}
@@ -195,7 +195,7 @@ func TestNewFriendACLFromSource(t *testing.T) {
 			2: nil,
 		},
 	}
-	acl := newFriendACLFromSource(source)
+	acl := NewFriendACLFromSource(source)
 	if !acl.IsAuthorized(mustKey(3)) {
 		t.Fatal("expected stub friend key to be authorized")
 	}
