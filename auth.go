@@ -7,7 +7,8 @@ import (
 	"github.com/opd-ai/toxcore"
 )
 
-type friendSource interface {
+// FriendSource provides a dynamic source of Tox friends.
+type FriendSource interface {
 	GetFriends() map[uint32]*toxcore.Friend
 }
 
@@ -32,7 +33,7 @@ func NewFriendACLFromTox(t *toxcore.Tox) *FriendACL {
 	return newFriendACLFromSource(t)
 }
 
-func newFriendACLFromSource(source friendSource) *FriendACL {
+func newFriendACLFromSource(source FriendSource) *FriendACL {
 	if source == nil {
 		return &FriendACL{}
 	}
@@ -53,8 +54,18 @@ func (a *FriendACL) IsAuthorized(toxPublicKey [32]byte) bool {
 	defer a.mu.RUnlock()
 
 	matched := 0
-	for _, friendKey := range a.friends {
-		matched |= subtle.ConstantTimeCompare(friendKey[:], toxPublicKey[:])
+	// Always do at least one constant-time comparison to avoid timing leaks.
+	// If no friends are configured, we still compare with a dummy zero key to maintain
+	// constant time even for empty ACL cases.
+	if len(a.friends) == 0 {
+		zeroKey := [32]byte{}
+		matched = subtle.ConstantTimeCompare(zeroKey[:], toxPublicKey[:])
+		// Ensure the dummy comparison never matches (result should be 0)
+		matched = 0
+	} else {
+		for _, friendKey := range a.friends {
+			matched |= subtle.ConstantTimeCompare(friendKey[:], toxPublicKey[:])
+		}
 	}
 	return matched == 1
 }

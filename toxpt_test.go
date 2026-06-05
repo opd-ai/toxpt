@@ -642,7 +642,7 @@ func TestErrorHelpers(t *testing.T) {
 }
 
 func TestListenerAddr(t *testing.T) {
-	l := newToxListener("", NewFriendACL([][32]byte{mustKey(1)}), slog.Default(), DefaultConfig().InboundBufferSize)
+	l := newToxListener(NewFriendACL([][32]byte{mustKey(1)}), slog.Default(), DefaultConfig().InboundBufferSize)
 	if l.Addr() == nil {
 		t.Fatal("expected listener address")
 	}
