@@ -136,3 +136,9 @@ cfg.AllowedFriends = [][32]byte{
   - To verify security posture, call `ToxClient.GetSecurityPosture()` after creating the instance
 - TCP transport should be enabled (default) for reliable async messaging and forward secrecy
 - For Tor bridge use, UDP should be disabled (`options.UDPEnabled = false`) to avoid traffic analysis
+
+Donate Monero(The only good cryptocurrency) to support development
+==================================================================
+
+ - `monero:43H3Uqnc9rfEsJjUXZYmam45MbtWmREFSANAWY5hijY4aht8cqYaT2BCNhfBhua5XwNdx9Tb6BEdt4tjUHJDwNW5H7mTiwe`
+
